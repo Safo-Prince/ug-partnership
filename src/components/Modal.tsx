@@ -1,7 +1,7 @@
-import { Fragment, useState } from "react";
+import { FormEvent, Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, X } from "@phosphor-icons/react";
 import Datepicker from "react-tailwindcss-datepicker";
 
 interface Props {
@@ -10,6 +10,9 @@ interface Props {
 }
 
 const Modal: React.FC<Props> = ({ open, setOpen }) => {
+  const [keywords, setKeywords] = useState("");
+  const [keywordList, setKeywordList] = useState<string[]>([]);
+
   const [value, setValue] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -20,6 +23,24 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
     setValue(newValue);
   };
 
+  const handleAddKeyword = (e: FormEvent) => {
+    e.preventDefault();
+    if (keywords.trim() !== "") {
+      setKeywordList((prevList) => [...prevList, keywords.trim()]);
+      setKeywords("");
+    }
+  };
+
+  const handleRemoveKeyword = (e: FormEvent, index: number) => {
+    e.preventDefault();
+    setKeywordList((prevList) => {
+      const newList = [...prevList];
+      newList.splice(index, 1);
+      return newList;
+    });
+  };
+
+  console.log(keywordList);
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -67,18 +88,18 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                     </Dialog.Title>
                     <form className="mt-2  space-y-3 w-full">
                       <input
-                        placeholder="Name of partnership"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        placeholder="Name Of Partnership"
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                       />
                       <select
                         id="location"
                         name="location"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                         defaultValue="--select college--"
                       >
-                        <option>--select college---</option>
-                        <option>College of Health Sciences</option>
-                        <option>College of Basic And Applied Sciences</option>
+                        <option>--Select College---</option>
+                        <option>College Of Health Sciences</option>
+                        <option>College Of Basic And Applied Sciences</option>
                         <option>College Of Humanities</option>
                         <option>College Of Education</option>
                       </select>
@@ -87,16 +108,16 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         rows={4}
                         name="comment"
                         id="comment"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                         defaultValue={""}
                       />
                       <select
                         id="location"
                         name="location"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                         defaultValue="--select category--"
                       >
-                        <option>--select category---</option>
+                        <option>--Select Category---</option>
                         <option>Research</option>
                         <option>Development</option>
                         <option>Internship</option>
@@ -109,10 +130,10 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                       <select
                         id="location"
                         name="location"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                         defaultValue="--select partner type---"
                       >
-                        <option>--select partner type---</option>
+                        <option>--Select Partner Type---</option>
                         <option>Local Company</option>
                         <option>Foreign Entity</option>
                         <option>Ministry</option>
@@ -121,29 +142,62 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
 
                       <input
                         placeholder="Industry"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                       />
+                      <div className="flex items-center space-x-2">
+                        <div className="flex  max-w-min rounded-md border  ">
+                          <input
+                            value={keywords}
+                            onChange={(e) => setKeywords(e.target.value)}
+                            placeholder="Add Keyword"
+                            className="block  rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm  ring-inset placeholder:text-gray-400 focus:ring-0 ring-0 sm:text-sm sm:leading-6"
+                          />
+                          <button
+                            onClick={(e) => handleAddKeyword(e)}
+                            className="border-2 border-dotted border-stone-200 py-1 px-1 rounded-md"
+                          >
+                            <Plus size={20} color="#d6cdcd" />
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-3 grid-rows-3 gap-1 ">
+                          {keywordList.map((item, index) => (
+                            <span
+                              key={index}
+                              className="py-1.5 px-1.5 bg-[#E6F1F4] text-[#1391B3] text-sm rounded-md flex space-x-1 items-center justify-between cursor-"
+                            >
+                              <span>{item}</span>
+                              <X
+                                size={12}
+                                className="cursor-pointer"
+                                onClick={(e) => handleRemoveKeyword(e, index)}
+                              />
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
                       <input
-                        placeholder="Secondary partners"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        placeholder="Secondary Partners"
+                        className="block  w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                       />
 
                       <input
                         placeholder="Duration"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                       />
                       <select
                         id="location"
                         name="location"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#1391B3] sm:text-sm sm:leading-6"
                         defaultValue="-- select status of partnership---"
                       >
-                        <option>-- select status of partnership---</option>
+                        <option>-- Select Status Of Partnership---</option>
                         <option>Active</option>
                         <option>Terminated</option>
                       </select>
                       <div>
-                        <p className="pl-2">Start date ~ End date</p>
+                        <p className="pl-2">Start Date ~ End Date</p>
                         <Datepicker
                           value={value}
                           onChange={handleValueChange}
@@ -160,6 +214,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                               id="input-file"
                               className="hidden"
                               type="file"
+                              multiple
                             />
                             <Plus size={20} color="#d6cdcd" />
                           </label>
