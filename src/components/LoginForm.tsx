@@ -1,14 +1,26 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import "../styles/Loginform.css";
 const LoginForm: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    setTimeout(() => navigate("/admin"), 3000);
+  };
+
   return (
-    <div className="w-full  h-auto flex justify-center items-center ">
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 ">
+    <div className="w-full   bg-red-200  flex justify-center items-center  flex-grow  background-image ">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8  ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img className="mx-auto" src={logo} alt="Your Company" />
         </div>
-
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6 border" action="#" method="POST">
+          <form onSubmit={(e) => onSubmit(e)} className="space-y-6 border">
             <div>
               <label
                 htmlFor="email"
@@ -54,7 +66,11 @@ const LoginForm: React.FC = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-[#153D6D] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#345176] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                {isLoading ? (
+                  <div className="spinner"></div>
+                ) : (
+                  <span>Sign in</span>
+                )}
               </button>
             </div>
           </form>
