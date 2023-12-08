@@ -1,14 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-const cors = require('cors')
-
-
-
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
 
 app.use(cors());
 
@@ -16,7 +12,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'Cj10856672',
+  password: '',
   database: 'sipp_project',
 });
 
@@ -35,6 +31,9 @@ app.use(bodyParser.json());
 // Endpoint to handle form submission
 app.post('/submit-form', (req, res) => {
   const formData = req.body;
+
+  // Log form data to console
+  console.log('Form Data:', formData);
 
   // Insert data into the MySQL database
   const sql = 'INSERT INTO partnership_details SET ?';

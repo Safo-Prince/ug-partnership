@@ -13,7 +13,7 @@ const Header: React.FC = () => {
   const location = useLocation();
 
   return (
-    <div className="w-full  mx-auto max-w-[1350px]  px-6 lg:px-8 flex justify-between items-center py-5">
+    <div className="w-full  mx-auto max-w-7xl  px-6 lg:px-8 flex justify-between items-center py-5">
       <img
         src={logo}
         className=" cursor-pointer"
@@ -41,6 +41,18 @@ const Header: React.FC = () => {
             </button>
           </li>
         </ul>
+      )}
+
+      {location.pathname === "/admin" && (
+        <div className="flex items-center justify-center space-x-3">
+          <h1 className="font-lato font-medium text-lg  ">Administrator</h1>
+          <button
+            onClick={() => navigate("/")}
+            className="rounded-full px-3.5 py-2 bg-[#324c6d] hover:bg-[#536c8e] text-white "
+          >
+            Log Out
+          </button>
+        </div>
       )}
     </div>
   );

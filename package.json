@@ -13,10 +13,12 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@phosphor-icons/react": "^2.0.15",
+    "dayjs": "^1.11.10",
     "iconsax-react": "^0.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.1"
+    "react-router-dom": "^6.20.1",
+    "react-tailwindcss-datepicker": "^1.6.6"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
@@ -32,7 +34,7 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.3",
     "vite": "^5.0.0"
   }
 }

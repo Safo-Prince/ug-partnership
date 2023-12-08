@@ -5,12 +5,12 @@ import Hero from "../components/Hero";
 
 const Login: React.FC = () => {
   return (
-    <>
-      <Header />
-      <Hero />
+    <div className=" flex flex-col h-screen">
+      {/* <Header /> */}
+      {/* <Hero /> */}
       <LoginForm />
-      <Footer />
-    </>
+      {/* <Footer /> */}
+    </div>
   );
 };
 

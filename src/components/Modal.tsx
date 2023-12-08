@@ -1,25 +1,16 @@
+import * as React from 'react';
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Plus } from "@phosphor-icons/react";
+import Datepicker from "react-tailwindcss-datepicker";
 
 interface Props {
   open: boolean;
   setOpen: (arg: boolean) => void;
 }
 
-
-
-
-
-
-
-
-
-
-
 const Modal: React.FC<Props> = ({ open, setOpen }) => {
-
   const [formData, setFormData] = useState({
     partnership_name: "",
     location: "--select college--",
@@ -32,6 +23,8 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
     status: "",
     start_date: "",
     end_date: "",
+    newKeyword: "", // new property for the input value
+    keywords: [],
   });
 
   const handleInputChange = (e) => {
@@ -42,9 +35,37 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
     }));
   };
 
+  const handleAddKeyword = () => {
+    const newKeyword = formData.newKeyword.trim();
+
+    if (newKeyword !== "") {
+      setFormData((prevData) => ({
+        ...prevData,
+        keywords: [...prevData.keywords, newKeyword],
+        newKeyword: "", // clear the input after adding a keyword
+      }));
+    }
+  };
+
+  const handleRemoveKeyword = (index) => {
+    setFormData((prevData) => {
+      const newKeywords = [...prevData.keywords];
+      newKeywords.splice(index, 1);
+      return { ...prevData, keywords: newKeywords };
+    });
+  };
+
+  const handleDateChange = (date) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      start_date: date.startDate,
+      end_date: date.endDate,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch("http://localhost:3001/submit-form", {
         method: "POST",
@@ -53,8 +74,10 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
         },
         body: JSON.stringify(formData),
       });
-
-      if (response.ok) {
+  
+      console.log('Response status:', response.status);
+  
+      if (response.status === 200) {
         console.log("Form submitted successfully");
         // Additional logic after successful form submission
         window.location.reload();
@@ -65,6 +88,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
       console.error("Error:", error);
     }
   };
+  
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -106,11 +130,11 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full ">
                     <Dialog.Title
                       as="h3"
-                      className="text-lg  text-center font-semibold leading-6 text-gray-900 mt-6"
+                      className="text-lg text-center font-semibold leading-6 text-gray-900 mt-6"
                     >
                       Partnership Detail Form
                     </Dialog.Title>
-                    <form onSubmit={handleSubmit} className="mt-2  space-y-3">
+                    <form onSubmit={handleSubmit} className="mt-2 space-y-3">
                       <input
                         type="text"
                         name="partnership_name"
@@ -119,6 +143,9 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.partnership_name}
                         onChange={handleInputChange}
                       />
+
+
+
                       <select
                         id="location"
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -127,33 +154,40 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         onChange={handleInputChange}
                       >
                         <option value="--select college--">--select college---</option>
-                        <option value="United States">United States</option>
-                        <option value="Canada">Canada</option>
-                        <option value="Mexico">Mexico</option>
+                        <option value="College Of Health Sciences">College Of Health Sciences</option>
+                        <option value="College Of Basic and Applied Science">College Of Basic And Applied Sciences</option>
+                        <option value="College Of Humanity">College Of Humanities</option>
+                        <option value="College Of Education">College Of Education</option>
                       </select>
+
                       <textarea
                         rows={4}
-                        
                         id="comment"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         name="comment"
-                        placeholder="Comment"
+                        placeholder="Description"
                         value={formData.comment}
                         onChange={handleInputChange}
                       />
                       <select
                         id="location"
-                        
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         name="category"
                         value={formData.category}
                         onChange={handleInputChange}
                       >
                         <option>--select category---</option>
-                        <option value="Category1">Category1</option>
-                        <option value="Category2">Category2</option>
-                        <option value="Category3">Category3</option>
+                        <option value="Research">Research</option>
+                        <option value="Development">Development</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Training">Training</option>
+                        <option value="Course development">Course development</option>
+                        <option value="Innovation">Innovation</option>
+                        <option value="Commercialism">Commercialism</option>
+                        <option value="Multi-purpose">Multi-purpose</option>
                       </select>
+
+
                       <select
                         id="location"
                         name="partner_type"
@@ -163,9 +197,10 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         onChange={handleInputChange}
                       >
                         <option value="--select partner type---">--select partner type---</option>
-                        <option value="Type1">Type1</option>
-                        <option value="Type2">Type2</option>
-                        <option value="Type3">Type3</option>
+                        <option value="Local Company">Local Company</option>
+                        <option value="Foreign Entity">Foreign Entity</option>
+                        <option value="Ministry">Ministry</option>
+                        <option value="Department or Agency of Government">Department or Agency of Government</option>
                       </select>
 
                       <input
@@ -177,6 +212,45 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.industry}
                         onChange={handleInputChange}
                       />
+
+
+                      <div className="flex items-center space-x-2">
+                          <div className="flex max-w-min rounded-md border">
+                            <input
+                              value={formData.newKeyword}
+                              onChange={handleInputChange}
+                              placeholder="Add Keyword"
+                              name="newKeyword"
+                              className="block rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-inset placeholder:text-gray-400 focus:ring-0 ring-0 sm:text-sm sm:leading-6"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleAddKeyword}
+                              className="border-2 border-dotted border-stone-200 py-1 px-1 rounded-md"
+                            >
+                              <Plus size={20} color="#d6cdcd" />
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-3 grid-rows-3 gap-1">
+                          {formData.keywords.map((item, index) => (
+                          <span
+                            key={index}
+                            className="py-1.5 px-1.5 bg-[#E6F1F4] text-[#1391B3] text-sm rounded-md flex space-x-1 items-center justify-between cursor-pointer" // Changed to cursor-pointer
+                          >
+                            <span>{item}</span>
+                            <XMarkIcon
+                              className="cursor-pointer" // Added cursor-pointer
+                              onClick={() => handleRemoveKeyword(index)}
+                            />
+                          </span>
+                        ))}
+
+                          </div>
+                      </div>
+
+
+
                       <input
                         placeholder="Secondary partners"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -196,30 +270,35 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.duration}
                         onChange={handleInputChange}
                       />
-                      <input
-                        type="text"
+                      <select
+                        id="status"
                         name="status"
-                        placeholder="Status"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         value={formData.status}
                         onChange={handleInputChange}
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                      <input
-                        type="text"
-                        name="start_date"
-                        placeholder="Start date"
-                        value={formData.start_date}
-                        onChange={handleInputChange}
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                      <input
-                        type="text"
-                        name="end_date"
-                        placeholder="End date"
-                        value={formData.end_date}
-                        onChange={handleInputChange}
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
+                      >
+                        <option value="">-- Select Status Of Partnership---</option>
+                        <option value="Active">Active</option>
+                        <option value="Terminated">Terminated</option>
+                      </select>
+
+
+
+                      {/* ... (similar lines for other input fields) */}
+                      
+
+                      {/* ... (similar lines for other input fields) */}
+                      <div>
+                        <p className="pl-2">Start Date ~ End Date</p>
+                        <Datepicker
+                          value={{
+                            startDate: formData.start_date,
+                            endDate: formData.end_date,
+                          }}
+                          onChange={handleDateChange}
+                        />
+                      </div>
+
 
                       <div className="b">
                         <div className="flex items-center space-x-3">
@@ -237,10 +316,14 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                           <span>Add relevant files</span>
                         </div>
                       </div>
-
-                      <button type="submit" className="block w-full rounded-md border-0 py-1.5 px-3 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 bg-[#153D6D]">
-                        Submit
-                      </button>
+                      <div className="flex items-center justify-end mt-4">
+                        <button
+                          type="submit"
+                          className="block w-full rounded-md border-0 py-1.5 px-3 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 bg-[#153D6D]">
+                          
+                          Submit
+                        </button>
+                      </div>
                     </form>
                   </div>
                 </div>
