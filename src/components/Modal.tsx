@@ -89,12 +89,12 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                     <form className="mt-2  space-y-3 w-full">
                       <input
                         placeholder="Name Of Partnership"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                       />
                       <select
                         id="location"
                         name="location"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         defaultValue="--select college--"
                       >
                         <option>--Select College---</option>
@@ -108,13 +108,13 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         rows={4}
                         name="comment"
                         id="comment"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         defaultValue={""}
                       />
                       <select
                         id="location"
                         name="location"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         defaultValue="--select category--"
                       >
                         <option>--Select Category---</option>
@@ -130,7 +130,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                       <select
                         id="location"
                         name="location"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         defaultValue="--select partner type---"
                       >
                         <option>--Select Partner Type---</option>
@@ -142,7 +142,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
 
                       <input
                         placeholder="Industry"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                       />
                       <div className="flex items-center space-x-2">
                         <div className="flex  max-w-min rounded-md border  ">
@@ -179,17 +179,17 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
 
                       <input
                         placeholder="Secondary Partners"
-                        className="block  w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="block  w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                       />
 
                       <input
                         placeholder="Duration"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                       />
                       <select
                         id="location"
                         name="location"
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#1391B3] sm:text-sm sm:leading-6"
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         defaultValue="-- select status of partnership---"
                       >
                         <option>-- Select Status Of Partnership---</option>

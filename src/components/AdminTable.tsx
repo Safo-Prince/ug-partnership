@@ -20,11 +20,12 @@ const AdminTable: React.FC = () => {
         <Filter />
         <Pagination />
       </div>
-      <div className="border rounded-lg h-96  mt-5">
-        <table className="w-full rounded-br-none rounded-bl-none ">
+      <div className="overflow-x-auto  shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg mt-4">
+        <table className="min-w-full divide-y divide-gray-300   border-b">
           <TableHeader columns={columns} />
           <TableBody />
         </table>
+        <Pagination />
       </div>
     </div>
   );

@@ -5,9 +5,8 @@ import AdminTable from "../components/adminTable";
 
 const Administrator: React.FC = () => {
   return (
-    <div className="h-screen">
+    <div className="h-screen flex flex-col">
       <Header />
-      <Hero />
       <AdminTable />
       <Footer />
     </div>
