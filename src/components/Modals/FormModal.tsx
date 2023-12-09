@@ -1,4 +1,4 @@
-import { FormEvent, Fragment, useState } from "react";
+import { Children, FormEvent, Fragment, useState, ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Plus, X } from "@phosphor-icons/react";
@@ -9,7 +9,7 @@ interface Props {
   setOpen: (arg: boolean) => void;
 }
 
-const Modal: React.FC<Props> = ({ open, setOpen }) => {
+const FormModal: React.FC<Props> = ({ open, setOpen }) => {
   const [keywords, setKeywords] = useState("");
   const [keywordList, setKeywordList] = useState<string[]>([]);
 
@@ -40,9 +40,8 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
     });
   };
 
-  console.log(keywordList);
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root static show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
@@ -154,7 +153,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                           />
                           <button
                             onClick={(e) => handleAddKeyword(e)}
-                            className="border-2 border-dotted border-stone-200 py-1 px-1 rounded-md"
+                            className="border-2 border-dotted border-stone-200 py-1 px-1 rounded-md hover:border-[#1391B3]"
                           >
                             <Plus size={20} color="#d6cdcd" />
                           </button>
@@ -238,4 +237,4 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
   );
 };
 
-export default Modal;
+export default FormModal;

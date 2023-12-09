@@ -14,13 +14,13 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full   bg-red-200  flex justify-center items-center  flex-grow  background-image ">
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 border border-red-400  ">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm border">
+    <div className="w-full   flex justify-center items-center  flex-grow  background-image ">
+      <div className=" w-full px-6  mx-2 sm:mx-0 sm:w-[30%] sm:bg-[#ECECEC] sm:rounded sm:shadow-md border borders-stone-300 py-20 ">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm ">
           <img className="mx-auto" src={logo} alt="Your Company" />
         </div>
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border border-red-200 ">
-          <form onSubmit={(e) => onSubmit(e)} className="space-y-6 border ">
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm ">
+          <form onSubmit={(e) => onSubmit(e)} className="space-y-6 ">
             <div>
               <label
                 htmlFor="email"

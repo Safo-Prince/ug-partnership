@@ -3,7 +3,9 @@ import { FileMinus } from "@phosphor-icons/react";
 const Filter: React.FC = () => {
   return (
     <div className="flex justify-center items-center space-x-2">
-      <h1 className="font-lato self-center font-normal ">Filter by{"  "}:</h1>
+      <h1 className="font-lato self-center font-normal text-sm ">
+        Filter by{"  "}:
+      </h1>
       <select
         id="filter"
         name="filter"

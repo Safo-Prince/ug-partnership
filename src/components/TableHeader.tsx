@@ -23,3 +23,5 @@ const TableHeader: FC<Props> = ({ columns }): JSX.Element => {
 };
 
 export default TableHeader;
+
+
