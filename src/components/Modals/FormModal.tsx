@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Fragment, useState } from "react";
+import { Children, FormEvent, Fragment, useState, ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, X } from "@phosphor-icons/react";
 import Datepicker from "react-tailwindcss-datepicker";
 
 interface Props {
@@ -10,9 +10,10 @@ interface Props {
   setOpen: (arg: boolean) => void;
 }
 
-const Modal: React.FC<Props> = ({ open, setOpen }) => {
+const FormModal: React.FC<Props> = ({ open, setOpen }) => {
   const [formData, setFormData] = useState({
     partnership_name: "",
+    email: "",
     location: "--select college--",
     comment: "",
     category: "--select category--",
@@ -25,6 +26,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
     end_date: "",
     newKeyword: "", // new property for the input value
     keywords: [],
+    
   });
 
   const handleInputChange = (e) => {
@@ -88,9 +90,9 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
       console.error("Error:", error);
     }
   };
-  
+
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root static show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
@@ -115,7 +117,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6">
+              <Dialog.Panel className="relative transform rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6 ">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
@@ -127,10 +129,10 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                   </button>
                 </div>
                 <div className="sm:flex sm:items-start w-full">
-                  <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full ">
+                  <div className="mt-3 text-center  sm:mt-0 sm:text-left w-full ">
                     <Dialog.Title
                       as="h3"
-                      className="text-lg text-center font-semibold leading-6 text-gray-900 mt-6"
+                      className="text-lg  text-center font-semibold leading-6 text-gray-900 mt-6"
                     >
                       Partnership Detail Form
                     </Dialog.Title>
@@ -144,6 +146,14 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         onChange={handleInputChange}
                       />
 
+                        <input
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                      />
 
 
                       <select
@@ -160,6 +170,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         <option value="College Of Education">College Of Education</option>
                       </select>
 
+
                       <textarea
                         rows={4}
                         id="comment"
@@ -169,6 +180,8 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.comment}
                         onChange={handleInputChange}
                       />
+
+
                       <select
                         id="location"
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -203,6 +216,8 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         <option value="Department or Agency of Government">Department or Agency of Government</option>
                       </select>
 
+
+
                       <input
                         placeholder="Industry"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -212,6 +227,7 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.industry}
                         onChange={handleInputChange}
                       />
+
 
 
                       <div className="flex items-center space-x-2">
@@ -249,8 +265,6 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                           </div>
                       </div>
 
-
-
                       <input
                         placeholder="Secondary partners"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -270,6 +284,8 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.duration}
                         onChange={handleInputChange}
                       />
+
+
                       <select
                         id="status"
                         name="status"
@@ -283,11 +299,6 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                       </select>
 
 
-
-                      {/* ... (similar lines for other input fields) */}
-                      
-
-                      {/* ... (similar lines for other input fields) */}
                       <div>
                         <p className="pl-2">Start Date ~ End Date</p>
                         <Datepicker
@@ -298,7 +309,6 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                           onChange={handleDateChange}
                         />
                       </div>
-
 
                       <div className="b">
                         <div className="flex items-center space-x-3">
@@ -316,14 +326,13 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
                           <span>Add relevant files</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-end mt-4">
-                        <button
+
+                      <button
                           type="submit"
                           className="block w-full rounded-md border-0 py-1.5 px-3 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 bg-[#153D6D]">
                           
                           Submit
                         </button>
-                      </div>
                     </form>
                   </div>
                 </div>
@@ -336,4 +345,4 @@ const Modal: React.FC<Props> = ({ open, setOpen }) => {
   );
 };
 
-export default Modal;
+export default FormModal;
