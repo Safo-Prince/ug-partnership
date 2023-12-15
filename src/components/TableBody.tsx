@@ -68,7 +68,7 @@ const TableBody: React.FC = () => {
           {tableData.map((rowData) => (
             <tr key={rowData.id} className="px-10">
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                {todayDate}
+                {rowData.upload_date}
               </td>
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
                 {rowData.partnership_name}

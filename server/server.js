@@ -8,10 +8,13 @@ const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
+const format = require('date-fns/format');
 
 
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
@@ -21,6 +24,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'Cj10856672',
+  //server_database_password: Blue12:34
   database: 'sipp_project',
 });
 
@@ -53,7 +57,6 @@ app.get('/api/data', (req, res) => {
       console.error('Error fetching data from MySQL:', err);
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
-      console.log('Data fetched from MySQL:', result);
       res.status(200).json(result);
     }
   });
@@ -77,54 +80,87 @@ app.get('/api/data/:id', (req, res) => {
 });
 
 
+// Set up multer storage and file naming
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads"); // Specify the directory where you want to store the files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname); // Use a unique filename
+  },
+});
+
+const upload = multer({ storage: storage });
 
 
-
+// Your existing MySQL configuration and database connection
 
 // Endpoint to handle form submission with file uploads
-app.post('/submit-form',(req, res) => {
+app.post("/submit-form", upload.array("files", 2), async (req, res) => {
   const formData = req.body;
 
   // Convert keywords array to CSV string
-  const keywordsCSV = formData.keywords.join(',');
+  const keywordsCSV = Array.isArray(formData.keywords) ? formData.keywords.join(',') : '';
+
 
   // Log form data to console
-  // console.log('Form Data:', formData);
+  console.log('Form Data:', formData);
 
+  // Log file paths to console
+  console.log('File Paths:', req.files.map(file => file.path));
+
+  // Your existing MySQL query and data insertion code
   const sql = 'INSERT INTO partnership_details SET ?';
-const insertData = { ...formData, keywords: keywordsCSV, approved: false };
 
-// Assuming you have a property named 'file' in formData
-if (req.file) {
-  // Add the file path to the insertData object
-  insertData.files = req.file.path;
-}
+    // Get the current date
+    const currentDate = new Date();
 
-db.query(sql, insertData, async (err, result) => {
-  if (err) {
-    console.error('Error inserting data into MySQL:', err);
-    res.status(500).send('Internal Server Error');
-  } else {
-    console.log('Data inserted into MySQL:', result);
-    res.status(200).send('Form submitted successfully');
+    // Convert the date to a string in the format 'DD-MM-YYYY'
+    const uploadDate = format(currentDate, 'dd-MM-yyyy');
+
+  const insertData = { ...formData, keywords: keywordsCSV, approved: false, upload_date: uploadDate };
+
   
+  // Assuming you have a property named 'files' in formData
+  if (req.files) {
+    // Add the file paths to the insertData object
+    insertData.files = req.files.map(file => file.path).join(', ');
+  }
+
+  // Your existing MySQL query and data insertion code
+  db.query(sql, insertData, async (err, result) => {
+    if (err) {
+      console.error('Error inserting data into MySQL:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      console.log('Data inserted into MySQL:', result);
+      res.status(200).send('Form submitted successfully');
 
       // Create a nodemailer transporter
-     // Use nodemailer to send the email
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'irondicjonathan@gmail.com', // Replace with your Gmail address
-        pass: 'zsfi avjq dagk joyf', // Replace with your Gmail password
-      },
-    });
+      // Use nodemailer to send the email
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'irondicjonathan@gmail.com', // Replace with your Gmail address
+          pass: 'zsfi avjq dagk joyf', // Replace with your Gmail password
+        },
+      });
 
       // Send email to the email address in the form data
       const userMailOptions = {
         from: 'irondicjonathan@gmail.com',
         to: formData.email, // Use the email from form data
         subject: 'Partnership Received',
-        text: 'Your Partnership has been submitted and will be reviewed for vetting and approval', // Add your email body here
+        text: `Dear Sir/Madam,
+
+        Your partnership application has been submitted.
+        We will revert in due time.        
+        Thank you.
+        
+        +233-(0)303-930436                                     orid@ug.edu.gh
+        +233-(0)302-213850
+                                            P.O. Box LG 1142
+                                            Legon, Accra`, // Add your email body here
       };
 
       try {
@@ -151,6 +187,7 @@ db.query(sql, insertData, async (err, result) => {
     }
   });
 });
+
 
 
 
@@ -406,7 +443,7 @@ app.get('/api/download-all-pdf', async (req, res) => {
 // Endpoint to handle sending an email
 app.post('/api/send-email', async (req, res) => {
   try {
-    const { modalId } = req.body;
+    const { modalId, status } = req.body;
 
     // Fetch the email address associated with the modalId from your database
     // (Replace this with your actual database logic)
@@ -414,6 +451,36 @@ app.post('/api/send-email', async (req, res) => {
 
     if (!email) {
       return res.status(404).json({ error: 'Email not found for the given ID' });
+    }
+
+    // Customize subject and body based on the status
+    let subject, body;
+    if (status === 'approved') {
+      subject = 'Partnersip Approved';
+      body = `Congratulations,
+
+Your partnership application has been reviewed and we are pleased to let you know that it meets our criteria. Your application will be added to the list partnerships we have.
+
+Thank you.
+
++233-(0)303-930436                                     orid@ug.edu.gh
++233-(0)302-213850
+                                    P.O. Box LG 1142
+                                    Legon, Accra`;
+
+    } else if (status === 'pending') {
+      subject = 'Partnership Pending';
+      body = `Dear sir/madam,,
+
+Your partnership application has been reviewed.
+Thank you.
+
++233-(0)303-930436                                     orid@ug.edu.gh
++233-(0)302-213850
+                                    P.O. Box LG 1142
+                                    Legon, Accra`;
+    } else {
+      return res.status(400).json({ error: 'Invalid status provided' });
     }
 
     // Use nodemailer to send the email
@@ -428,8 +495,8 @@ app.post('/api/send-email', async (req, res) => {
     const mailOptions = {
       from: 'irondicjonathan@gmail.com',
       to: email, // Use the retrieved email address
-      subject: 'Subject of the email',
-      text: 'Body of the email',
+      subject: subject,
+      text: body,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -446,7 +513,6 @@ app.post('/api/send-email', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 // Simulated database function (replace this with your actual database logic)
 const getEmailFromDatabase = async (modalId) => {
   // Simulate a database query to retrieve the email associated with the modalId

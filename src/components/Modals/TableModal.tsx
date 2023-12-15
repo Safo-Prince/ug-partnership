@@ -35,9 +35,16 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   }, [rowData]);
 
 
+  function getFileNameFromPath(filePath) {
+    const parts = filePath.split('/');
+    return parts[parts.length - 1];
+  }
+  
+
+
 
   // Function to handle sending the email
-const handleSendEmail = async () => {
+const handleSendEmail = async (status) => {
   try {
     // Make a request to your server to send the email
     const response = await fetch('http://localhost:3001/api/send-email', {
@@ -47,6 +54,7 @@ const handleSendEmail = async () => {
       },
       body: JSON.stringify({
         modalId: modalData.id,
+        status: status, // Add the status property
       }),
     });
 
@@ -57,10 +65,12 @@ const handleSendEmail = async () => {
 
     // Log a success message or handle as needed
     console.log('Email sent successfully');
+    setOpen(false);
   } catch (error) {
     console.error('Error sending email:', error);
   }
 };
+
 
 
   return (
@@ -162,31 +172,33 @@ const handleSendEmail = async () => {
                         </p>
                       </div>
                       <div className="font-lato">
-                        <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg ">
+                        <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg">
                           Relevant Files
                         </h1>
-                        <p className=" text-[#007BFF] text-left text-xs sm:text-base ">
-                          Anything
-                        </p>
-                        <p className="text-[#007BFF] text-left text-xs sm:text-base">
-                          {" "}
-                          NDA.PDF
-                        </p>
-                        <p className="text-[#007BFF] text-left text-xs sm:text-base">
-                          {" "}
-                          MOU.pdf{" "}
-                        </p>
+                        {modalData &&
+                          modalData.files &&
+                          modalData.files.split(',').map((filePath, index) => (
+                            <p key={index} className="text-[#007BFF] text-left text-xs sm:text-base">
+                              <a href={filePath} download>
+                                {getFileNameFromPath(filePath)}
+                              </a>
+                            </p>
+                          ))}
                       </div>
                     </div>
 
                     <div className="flex justify-around mt-5 space-x-5">
                     <button
                         className="rounded-md bg-[#153D6D] w-full py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#48627f]"
-                        onClick={handleSendEmail}
+                        onClick={() => handleSendEmail('approved')} // Pass 'approved' for the accept button
                       >
                         Accept
                       </button>
-                      <button className="rounded-md bg-[#F46969] w-full py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#f19494]  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+
+                      <button
+                        className="rounded-md bg-[#F46969] w-full py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#f19494]  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        onClick={() => handleSendEmail('pending')} // Pass 'pending' for the pending button
+                      >
                         Pending
                       </button>
                     </div>

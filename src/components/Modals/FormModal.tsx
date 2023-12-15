@@ -26,6 +26,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
     end_date: "",
     newKeyword: "", // new property for the input value
     keywords: [],
+    files: [],
     
   });
 
@@ -65,23 +66,53 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setFormData((prevData) => ({
+      ...prevData,
+      files: [...prevData.files, ...selectedFiles],
+    }));
+  };
+
+  const handleRemoveFile = (index) => {
+    setFormData((prevData) => {
+      const newFiles = [...prevData.files];
+      newFiles.splice(index, 1);
+      return { ...prevData, files: newFiles };
+    });
+  };
+
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-  
+
     try {
+      const formDataToSend = new FormData();
+      // Append files to FormData
+      if (formData.files) {
+        for (let i = 0; i < formData.files.length; i++) {
+          formDataToSend.append("files", formData.files[i]);
+        }
+      }
+
+      // Append other form data properties
+      Object.keys(formData).forEach((key) => {
+        if (key !== "files") {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
       const response = await fetch("http://localhost:3001/submit-form", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
-  
-      console.log('Response status:', response.status);
-  
-      if (response.status === 200) {
+
+      if (response.ok) {
         console.log("Form submitted successfully");
-        // Additional logic after successful form submission
+        setOpen(false);
+        // Refresh the page to clear input fields
         window.location.reload();
       } else {
         console.error("Error submitting form");
@@ -311,21 +342,38 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                       </div>
 
                       <div className="b">
-                        <div className="flex items-center space-x-3">
-                          <label id="input-file" className="cursor-pointer border-dotted border-2 w-10 h-10  flex items-center justify-center "
-                          type="file"
-                         >
-                            <input
-                              id="input-file"
-                              className="hidden"
-                              type="file"
-                            />
-                            <Plus size={20} color="#d6cdcd" />
-                          </label>
-
-                          <span>Add relevant files</span>
-                        </div>
-                      </div>
+            <div className="flex items-center space-x-3">
+              <label
+                id="input-file"
+                className="cursor-pointer border-dotted border-2 w-10 h-10  flex items-center justify-center"
+              >
+                <input
+                  id="input-file"
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange}
+                  multiple // Allow multiple files
+                />
+                <Plus size={20} color="#d6cdcd" />
+              </label>
+              <span>Add relevant files</span>
+            </div>
+            <div className="grid grid-cols-3 grid-rows-3 gap-1">
+            {formData.files && formData.files.map((file, index) => (
+                <div
+                  key={index}
+                  className="py-1.5 px-1.5 bg-[#E6F1F4] text-[#1391B3] text-sm rounded-md flex space-x-1 items-center justify-between cursor-"
+                >
+                  <span>{file.name}</span>
+                  <X
+                    size={12}
+                    className="cursor-pointer"
+                    onClick={() => handleRemoveFile(index)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
 
                       <button
                           type="submit"
