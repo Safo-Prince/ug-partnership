@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from "react";
 import deloitte from "../assets/deloitte.png";
 import tullow from "../assets/tullow-oil.png";

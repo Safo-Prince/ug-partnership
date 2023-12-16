@@ -1,5 +1,5 @@
+import * as React from 'react';
 import Pagination from "./Pagination";
-import Filter from "./Filter";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import { columns } from "../constants/constants";

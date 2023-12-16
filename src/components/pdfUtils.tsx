@@ -1,5 +1,6 @@
 // pdfUtils.ts
 
+{/* @ts-ignore */}
 export const downloadPdf = async (rowData) => {
     try {
       const response = await fetch(`http://localhost:3001/api/download-pdf/${rowData.id}`);

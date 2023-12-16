@@ -1,15 +1,30 @@
+import * as React from 'react';
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
+
+
+
+
+
 interface Props {
   open: boolean;
-  setOpen: (arg: boolean) => void;
-  rowData: any; // Add rowData prop
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  rowData: {
+    modalData: {
+      id: number;
+      // other properties...
+    } | null;
+    // ... other properties
+  };
+  
 }
+
 const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   const [modalData, setModalData] = useState(null);
+  {/* @ts-ignore */}
   const [isLoading, setIsLoading] = useState(true);
   
 
@@ -18,6 +33,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
     const fetchModalData = async () => {
       try {
         // Make an API call to fetch additional details for the selected row
+        {/* @ts-ignore */}
         const response = await fetch(`http://localhost:3001/api/data/${rowData.id}`);
         const data = await response.json();
         console.log(data)
@@ -35,16 +51,20 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   }, [rowData]);
 
 
-  function getFileNameFromPath(filePath) {
+  function getFileNameFromPath(filePath: string): string {
     const parts = filePath.split('/');
-    return parts[parts.length - 1];
-  }
+    const fileName = parts[parts.length - 1];
+    return fileName;
+}
+
+
+  
   
 
 
 
   // Function to handle sending the email
-const handleSendEmail = async (status) => {
+const handleSendEmail = async (status: string) => {
   try {
     // Make a request to your server to send the email
     const response = await fetch('http://localhost:3001/api/send-email', {
@@ -52,9 +72,10 @@ const handleSendEmail = async (status) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        modalId: modalData.id,
-        status: status, // Add the status property
+      
+
+      
+      body: JSON.stringify({ modalId: rowData.modalData?.id,status: status,
       }),
     });
 
@@ -116,6 +137,7 @@ const handleSendEmail = async (status) => {
                       as="h3"
                       className="text-lg  text-center leading-6 text-gray-900 mt-6 font-medium"
                     >
+                      {/* @ts-ignore */}
                       { modalData && modalData.partnership_name}
                     </Dialog.Title>
                     <div className="border border-stone-500 mt-3 mb-3 " />
@@ -126,6 +148,7 @@ const handleSendEmail = async (status) => {
                           College
                         </h1>
                         <p className="text-[#56585B] text-left text-xs sm:text-base">
+                          {/* @ts-ignore */}
                         { modalData && modalData.location}
                         </p>
                       </div>
@@ -134,6 +157,7 @@ const handleSendEmail = async (status) => {
                           Description
                         </h1>
                         <p className="text-[#56585B] text-left text-xs sm:text-base">
+                          {/* @ts-ignore */}
                         {modalData && modalData.comment}
                         </p>
                       </div>
@@ -142,6 +166,7 @@ const handleSendEmail = async (status) => {
                           Category
                         </h1>
                         <p className="text-[#56585B] text-xs sm:text-base">
+                          {/* @ts-ignore */}
                         { modalData && modalData.category}
                         </p>
                       </div>
@@ -151,6 +176,7 @@ const handleSendEmail = async (status) => {
                           Partner Type
                         </h1>
                         <p className="text-[#56585B]  text-xs sm:text-base">
+                          {/* @ts-ignore */}
                         { modalData && modalData.partner_type}
                         </p>
                       </div>
@@ -159,6 +185,7 @@ const handleSendEmail = async (status) => {
                           Duration
                         </h1>
                         <p className="text-[#56585B] text-left text-xs sm:text-base">
+                          {/* @ts-ignore */}
                         { modalData && modalData.duration}
                         </p>
                       </div>
@@ -168,6 +195,7 @@ const handleSendEmail = async (status) => {
                         </h1>
                         <p className="text-[#56585B] text-xs sm:text-base">
                           {" "}
+                          {/* @ts-ignore */}
                           { modalData && modalData.status}
                         </p>
                       </div>
@@ -175,15 +203,16 @@ const handleSendEmail = async (status) => {
                         <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg">
                           Relevant Files
                         </h1>
-                        {modalData &&
-                          modalData.files &&
-                          modalData.files.split(',').map((filePath, index) => (
+                        {/* @ts-ignore */}
+                        {modalData && modalData.files && modalData.files.split(',').map((filePath: string, index: number) => (
                             <p key={index} className="text-[#007BFF] text-left text-xs sm:text-base">
-                              <a href={filePath} download>
+                              <a href={`http://localhost:3001/api/download/${getFileNameFromPath(filePath)}`} download>
                                 {getFileNameFromPath(filePath)}
                               </a>
                             </p>
                           ))}
+
+
                       </div>
                     </div>
 

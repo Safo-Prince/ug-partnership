@@ -536,6 +536,15 @@ const getEmailFromDatabase = async (modalId) => {
 
 
 
+app.get('/api/download/:fileName', (req, res) => {
+  const fileName = req.params.fileName;
+  const filePath = path.join(__dirname, './uploads', fileName);
+
+  // Use appropriate headers
+  res.download(filePath);
+});
+
+
 
 
 

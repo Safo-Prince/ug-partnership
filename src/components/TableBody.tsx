@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useEffect, useState } from "react";
 import { Eye, Trash } from "iconsax-react";
 import { FileMinus } from "@phosphor-icons/react";
@@ -5,18 +6,17 @@ import TableModal from "./Modals/TableModal";
 import TableShimmer from "./shimmers/TableShimmer";
 import Filter from "./Filter"; // Import the Filter component
 import { downloadPdf } from './pdfUtils';
-import { handleDownloadAllPdf } from './pdfUtils'; // 
 
 
 const TableBody: React.FC = () => {
-  const [open, setOpen] = useState(false);
+  //const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [tableData, setTableData] = useState([]);
-  const [todayDate, setTodayDate] = useState('');
+  //const [todayDate, setTodayDate] = useState('');
   const [selectedFilter, setSelectedFilter] = useState(''); // For the filter
   const [selectedRow, setSelectedRow] = useState(null); // Track the selected row
   const [openModal, setOpenModal] = useState(false);
-  const [modalData, setModalData] = useState(null); // Define modalData state
+  //const [modalData, setModalData] = useState(null); // Define modalData state
 
   
 
@@ -28,11 +28,7 @@ const TableBody: React.FC = () => {
         const data = await response.json();
         setTableData(data);
 
-        // Fetch today's date when the component mounts
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString('en-US');
-
-        setTodayDate(formattedDate);
+      
 
         setIsLoading(false);
       } catch (error) {
@@ -49,6 +45,7 @@ const TableBody: React.FC = () => {
 
 
   // Function to handle downloading the PDF
+  {/* @ts-ignore */}
   const handleDownloadPdf = (rowData) => {
     downloadPdf(rowData);
   };
@@ -59,34 +56,41 @@ const TableBody: React.FC = () => {
     <>
 
       <Filter onSelectFilter={handleSelectFilter} />
+      {/* @ts-ignore */}
       <TableModal open={openModal} setOpen={setOpenModal} rowData={selectedRow}  />
 
       {isLoading ? (
         <TableShimmer />
       ) : (
         <tbody className="divide-y divide-gray-200 bg-white">
-          {tableData.map((rowData) => (
-            <tr key={rowData.id} className="px-10">
+          {/* @ts-ignore */}
+          {tableData.map((rowData) => ( <tr key={rowData.id} className="px-10">
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                {/* @ts-ignore */}
                 {rowData.upload_date}
               </td>
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
+                {/* @ts-ignore */}
                 {rowData.partnership_name}
               </td>
 
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
+                {/* @ts-ignore */}
                 {rowData.partner_type}
               </td>
 
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
+                {/* @ts-ignore */}
                 {rowData.location}
               </td>
 
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
+                {/* @ts-ignore */}
                 {rowData.category}
               </td>
 
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
+                {/* @ts-ignore */}
                 {rowData.status}
               </td>
               {/* Add other columns based on your data structure */}

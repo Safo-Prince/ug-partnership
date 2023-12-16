@@ -18,8 +18,8 @@ router.use(bodyParser.json());
 
 // Simulate a user for testing
 const validUser = {
-  email: 'irondicjonathan@gmail.com',
-  password: '12345',
+  email: 'josephkafui27@gmail.com',
+  password: '1234567891',
 };
 
 router.post('/login',urlencodedParser, (req, res) => {

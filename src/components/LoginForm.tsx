@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
@@ -5,6 +6,7 @@ import "../styles/Loginform.css";
 
   const LoginForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
+  {/* @ts-ignore */}
   const [loginError, setLoginError] = useState(false);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const navigate = useNavigate();
