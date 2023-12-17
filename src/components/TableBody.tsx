@@ -24,7 +24,7 @@ const TableBody: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/data?filter=${selectedFilter}`);       
+        const response = await fetch(`http://197.255.126.63:3001/api/data?filter=${selectedFilter}`);       
         const data = await response.json();
         setTableData(data);
 

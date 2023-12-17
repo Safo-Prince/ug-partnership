@@ -3,7 +3,7 @@
 {/* @ts-ignore */}
 export const downloadPdf = async (rowData) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/download-pdf/${rowData.id}`);
+      const response = await fetch(`http://197.255.126.63:3001/api/download-pdf/${rowData.id}`);
       
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);

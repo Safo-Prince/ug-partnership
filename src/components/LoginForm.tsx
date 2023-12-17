@@ -16,7 +16,7 @@ import "../styles/Loginform.css";
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/login', {
+      const response = await fetch('http://197.255.126.63:3001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
