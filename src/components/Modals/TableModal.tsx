@@ -67,7 +67,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
 const handleSendEmail = async (status: string) => {
   try {
     // Make a request to your server to send the email
-    const response = await fetch('http://localhost:3001/api/send-email', {
+    const response = await fetch('http://197.255.126.63:3001/api/send-email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -206,7 +206,7 @@ const handleSendEmail = async (status: string) => {
                         {/* @ts-ignore */}
                         {modalData && modalData.files && modalData.files.split(',').map((filePath: string, index: number) => (
                             <p key={index} className="text-[#007BFF] text-left text-xs sm:text-base">
-                              <a href={`http://localhost:3001/api/download/${getFileNameFromPath(filePath)}`} download>
+                              <a href={`http://197.255.126.63:3001/api/download/${getFileNameFromPath(filePath)}`} download>
                                 {getFileNameFromPath(filePath)}
                               </a>
                             </p>
