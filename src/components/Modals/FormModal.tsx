@@ -113,7 +113,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
         }
       });
 
-      const response = await fetch("http://localhost:3001/submit-form", {
+      const response = await fetch("http://197.255.126.63:3001/submit-form", {
         method: "POST",
         body: formDataToSend,
       });
