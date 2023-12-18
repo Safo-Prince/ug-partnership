@@ -24,20 +24,23 @@ const TableBody: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://197.255.126.63:3001/api/data?filter=${selectedFilter}`);       
+        const response = await fetch(`http://197.255.126.63:3001/api/data?filter=${selectedFilter}`);
         const data = await response.json();
-        setTableData(data);
+  
+        // Sort the data based on the 'id' property in descending order
+        const sortedData = data.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
 
-      
-
+  
+        setTableData(sortedData);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
+  
     fetchData();
   }, [selectedFilter]);
+  
 
   const handleSelectFilter = (filter: string) => {
     setSelectedFilter(filter);
