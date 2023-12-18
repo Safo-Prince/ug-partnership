@@ -23,8 +23,8 @@ app.use(cors());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'Cj10856672',
-  //password: 'Blue12:34',
+  //password: 'Cj10856672',
+  password: 'Blue12:34',
   database: 'sipp_project',
 });
 
