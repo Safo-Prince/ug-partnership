@@ -1,7 +1,7 @@
 const express = require('express');
 const authRoutes = require('./authRoutes'); // Adjust the path as needed
 const bodyParser = require('body-parser');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const cors = require('cors');
 const pdf = require('pdfkit');
 const fs = require('fs');
@@ -19,21 +19,20 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  //password: 'Cj10856672',
   password: 'Blue12:34',
+  //paswword:'Cj10856672'
   database: 'sipp_project',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-// Connect to MySQL
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-  } else {
-    console.log('Connected to MySQL');
-  }
+// Event listener for when a connection is acquired
+db.on('acquire', function (connection) {
+  console.log('Connection %d acquired', connection.threadId);
 });
 
 // Middleware to parse JSON data from the request body
