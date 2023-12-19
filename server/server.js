@@ -30,14 +30,7 @@ const db = mysql.createPool({
   queueLimit: 0,
 });
 
-// Connect to MySQL
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-  } else {
-    console.log('Connected to MySQL');
-  }
-});
+
 
 // Middleware to parse JSON data from the request body
 app.use(bodyParser.json());
