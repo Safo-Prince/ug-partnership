@@ -30,7 +30,10 @@ const db = mysql.createPool({
   queueLimit: 0,
 });
 
-
+// Event listener for when a connection is acquired
+db.on('acquire', function (connection) {
+  console.log('Connection %d acquired', connection.threadId);
+});
 
 // Middleware to parse JSON data from the request body
 app.use(bodyParser.json());
