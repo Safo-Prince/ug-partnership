@@ -1,7 +1,7 @@
 const express = require('express');
 const authRoutes = require('./authRoutes'); // Adjust the path as needed
 const bodyParser = require('body-parser');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const cors = require('cors');
 const pdf = require('pdfkit');
 const fs = require('fs');
@@ -19,13 +19,15 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 
-// MySQL database configuration
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  //password: 'Cj10856672',
   password: 'Blue12:34',
+  //paswword:'Cj10856672'
   database: 'sipp_project',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 // Connect to MySQL
@@ -43,7 +45,7 @@ app.use(bodyParser.json());
 
 
 // Endpoint to fetch data from MySQL and serve as JSON
-app.get('/api/data', (req, res) => {
+app.get('/api/data',async (req, res) => {
   let sql = 'SELECT * FROM partnership_details';
 
   // Check for filter query parameter
@@ -52,14 +54,13 @@ app.get('/api/data', (req, res) => {
     sql += ` WHERE status = '${filter}'`; // Adjust this based on your data structure
   }
 
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error('Error fetching data from MySQL:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    } else {
-      res.status(200).json(result);
-    }
-  });
+  try {
+    const [result] = await db.query(sql);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error('Error fetching data from MySQL:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 
