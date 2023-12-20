@@ -31,9 +31,9 @@ const db = mysql.createPool({
 });
 
 // Event listener for when a connection is acquired
-db.on('acquire', function (connection) {
-  console.log('Connection %d acquired', connection.threadId);
-});
+//db.on('acquire', function (connection) {
+  //console.log('Connection %d acquired', connection.threadId);
+//});
 
 // Middleware to parse JSON data from the request body
 app.use(bodyParser.json());
@@ -99,6 +99,7 @@ const upload = multer({ storage: storage });
 // Your existing MySQL configuration and database connection
 
 // Endpoint to handle form submission with file uploads
+// Your existing MySQL query and data insertion code
 app.post("/submit-form", upload.array("files", 2), async (req, res) => {
   const formData = req.body;
 
@@ -129,75 +130,88 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
   }
 
   try {
-    // Perform the database insertion
-    db.query(sql, insertData, async (err, result) => {
+    // Acquire a connection from the pool
+    db.getConnection((err, connection) => {
       if (err) {
-        console.error('Error inserting data into MySQL:', err);
+        console.error('Error acquiring connection from pool:', err);
         res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        console.log('Data inserted into MySQL:', result);
+        return;
+      }
 
-        // Create a nodemailer transporter
-        const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-            user: 'irondicjonathan@gmail.com',
-            pass: 'zsfi avjq dagk joyf',
-          },
-        });
+      // Perform the database insertion
+      connection.query(sql, insertData, async (err, result) => {
+        // Release the connection back to the pool
+        connection.release();
 
-        // Send email to the email address in the form data
-        const userMailOptions = {
-          from: 'irondicjonathan@gmail.com',
-          to: formData.email,
-          subject: 'Partnership Received',
-          text: `Dear Sir/Madam,
+        if (err) {
+          console.error('Error inserting data into MySQL:', err);
+          res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+          console.log('Data inserted into MySQL:', result);
 
-          Your partnership application has been submitted.
-          We will revert in due time.        
-          Thank you.
-          
-          +233-(0)303-930436                                     orid@ug.edu.gh
-          +233-(0)302-213850
-                                          P.O. Box LG 1142
-                                          Legon, Accra`,
-        };
+          // Create a nodemailer transporter
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'irondicjonathan@gmail.com',
+              pass: 'zsfi avjq dagk joyf',
+            },
+          });
 
-        try {
-          // Perform the email sending to user
-          await transporter.sendMail(userMailOptions);
-          console.log('Email sent to user successfully');
+          // Send email to the email address in the form data
+          const userMailOptions = {
+            from: 'irondicjonathan@gmail.com',
+            to: formData.email,
+            subject: 'Partnership Received',
+            text: `Dear Sir/Madam,
 
-          // Send email to the statically provided email
-          const adminMailOptions = {
-            from: 'irondicjonathan@gmail',
-            to: 'mikesaxxmusic@gmail.com',
-            subject: 'Subject for admin',
-            text: 'A new Partnership has been uploaded',
+            Your partnership application has been submitted.
+            We will revert in due time.        
+            Thank you.
+            
+            +233-(0)303-930436                                     orid@ug.edu.gh
+            +233-(0)302-213850
+                                            P.O. Box LG 1142
+                                            Legon, Accra`,
           };
 
           try {
-            // Perform the email sending to admin
-            await transporter.sendMail(adminMailOptions);
-            console.log('Email sent to admin successfully');
+            // Perform the email sending to user
+            await transporter.sendMail(userMailOptions);
+            console.log('Email sent to user successfully');
 
-            // Respond to the client only after all asynchronous operations are completed
-            res.status(200).json({ message: 'Form submitted successfully' });
-          } catch (adminEmailError) {
-            console.error('Error sending email to admin:', adminEmailError);
+            // Send email to the statically provided email
+            const adminMailOptions = {
+              from: 'irondicjonathan@gmail',
+              to: 'mikesaxxmusic@gmail.com',
+              subject: 'Subject for admin',
+              text: 'A new Partnership has been uploaded',
+            };
+
+            try {
+              // Perform the email sending to admin
+              await transporter.sendMail(adminMailOptions);
+              console.log('Email sent to admin successfully');
+
+              // Respond to the client only after all asynchronous operations are completed
+              res.status(200).json({ message: 'Form submitted successfully' });
+            } catch (adminEmailError) {
+              console.error('Error sending email to admin:', adminEmailError);
+              res.status(500).json({ error: 'Internal Server Error' });
+            }
+          } catch (emailError) {
+            console.error('Error sending email to user:', emailError);
             res.status(500).json({ error: 'Internal Server Error' });
           }
-        } catch (emailError) {
-          console.error('Error sending email to user:', emailError);
-          res.status(500).json({ error: 'Internal Server Error' });
         }
-      }
+      });
     });
   } catch (error) {
     console.error('Error processing form submission:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 

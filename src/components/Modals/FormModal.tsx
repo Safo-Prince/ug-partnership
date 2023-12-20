@@ -132,7 +132,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setButtonText("submitting...");
-
+  
     try {
       const formDataToSend: any = new FormData();
       // Append files to FormData
@@ -141,23 +141,20 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
           formDataToSend.append("files", formData.files[i]);
         }
       }
-
+  
       // Append other form data properties
       Object.keys(formData).forEach((key) => {
         if (key !== "files") {
-          {
-            /* @ts-ignore */
-          }
-          /* @ts-ignore */
+           /* @ts-ignore */
           formDataToSend.append(key, formData[key]);
         }
       });
-
+  
       const response = await fetch("http://197.255.126.63:3001/submit-form", {
         method: "POST",
         body: formDataToSend,
       });
-
+  
       if (response.ok) {
         const responseData = await response.json(); // Parse JSON response
         console.log("Form submitted successfully:", responseData.message);
@@ -172,6 +169,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
       console.error("Error:", error);
     }
   };
+  
 
   return (
     <Transition.Root static show={open} as={Fragment}>
