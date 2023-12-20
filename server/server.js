@@ -19,21 +19,21 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 
-const db = mysql.createPool({
+const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'Blue12:34',
-  //paswword:'Cj10856672'
   database: 'sipp_project',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
 });
 
-// Event listener for when a connection is acquired
-//db.on('acquire', function (connection) {
-  //console.log('Connection %d acquired', connection.threadId);
-//});
+// Event listener for when a connection is established
+db.connect((err) => {
+  if (err) {
+    console.error('Error connecting to MySQL:', err);
+  } else {
+    console.log('Connected to MySQL');
+  }
+});
 
 // Middleware to parse JSON data from the request body
 app.use(bodyParser.json());
@@ -99,7 +99,6 @@ const upload = multer({ storage: storage });
 // Your existing MySQL configuration and database connection
 
 // Endpoint to handle form submission with file uploads
-// Your existing MySQL query and data insertion code
 app.post("/submit-form", upload.array("files", 2), async (req, res) => {
   const formData = req.body;
 
@@ -130,91 +129,75 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
   }
 
   try {
-    // Acquire a connection from the pool
-    db.getConnection((err, connection) => {
+    // Perform the database insertion
+    db.query(sql, insertData, async (err, result) => {
       if (err) {
-        console.error('Error acquiring connection from pool:', err);
+        console.error('Error inserting data into MySQL:', err);
         res.status(500).json({ error: 'Internal Server Error' });
-        return;
-      }
+      } else {
+        console.log('Data inserted into MySQL:', result);
 
-      console.log('Connection acquired:', connection.threadId);
+        // Create a nodemailer transporter
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'irondicjonathan@gmail.com',
+            pass: 'zsfi avjq dagk joyf',
+          },
+        });
 
-      // Perform the database insertion
-      connection.query(sql, insertData, async (err, result) => {
-        // Release the connection back to the pool
-        connection.release();
+        // Send email to the email address in the form data
+        const userMailOptions = {
+          from: 'irondicjonathan@gmail.com',
+          to: formData.email,
+          subject: 'Partnership Received',
+          text: `Dear Sir/Madam,
 
-        if (err) {
-          console.error('Error inserting data into MySQL:', err);
-          res.status(500).json({ error: 'Internal Server Error' });
-        } else {
-          console.log('Data inserted into MySQL:', result);
+          Your partnership application has been submitted.
+          We will revert in due time.        
+          Thank you.
+          
+          +233-(0)303-930436                                     orid@ug.edu.gh
+          +233-(0)302-213850
+                              P.O. Box LG 1142
+                              Legon, Accra`,
+        };
 
-          // Create a nodemailer transporter
-          const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: 'irondicjonathan@gmail.com',
-              pass: 'zsfi avjq dagk joyf',
-            },
-          });
+        try {
+          // Perform the email sending to user
+          await transporter.sendMail(userMailOptions);
+          console.log('Email sent to user successfully');
 
-          // Send email to the email address in the form data
-          const userMailOptions = {
-            from: 'irondicjonathan@gmail.com',
-            to: formData.email,
-            subject: 'Partnership Received',
-            text: `Dear Sir/Madam,
-
-            Your partnership application has been submitted.
-            We will revert in due time.        
-            Thank you.
-            
-            +233-(0)303-930436                                     orid@ug.edu.gh
-            +233-(0)302-213850
-                                            P.O. Box LG 1142
-                                            Legon, Accra`,
+          // Send email to the statically provided email
+          const adminMailOptions = {
+            from: 'irondicjonathan@gmail',
+            to: 'mikesaxxmusic@gmail.com',
+            subject: 'Subject for admin',
+            text: 'A new Partnership has been uploaded',
           };
 
           try {
-            // Perform the email sending to user
-            await transporter.sendMail(userMailOptions);
-            console.log('Email sent to user successfully');
+            // Perform the email sending to admin
+            await transporter.sendMail(adminMailOptions);
+            console.log('Email sent to admin successfully');
 
-            // Send email to the statically provided email
-            const adminMailOptions = {
-              from: 'irondicjonathan@gmail',
-              to: 'mikesaxxmusic@gmail.com',
-              subject: 'Subject for admin',
-              text: 'A new Partnership has been uploaded',
-            };
-
-            try {
-              // Perform the email sending to admin
-              await transporter.sendMail(adminMailOptions);
-              console.log('Email sent to admin successfully');
-
-              // Respond to the client only after all asynchronous operations are completed
-              res.status(200).json({ message: 'Form submitted successfully' });
-            } catch (adminEmailError) {
-              console.error('Error sending email to admin:', adminEmailError);
-              res.status(500).json({ error: 'Internal Server Error' });
-            }
-          } catch (emailError) {
-            console.error('Error sending email to user:', emailError);
+            // Respond to the client only after all asynchronous operations are completed
+            res.status(200).json({ message: 'Form submitted successfully' });
+          } catch (adminEmailError) {
+            console.error('Error sending email to admin:', adminEmailError);
             res.status(500).json({ error: 'Internal Server Error' });
           }
+        } catch (emailError) {
+          console.error('Error sending email to user:', emailError);
+          res.status(500).json({ error: 'Internal Server Error' });
         }
-      });
+      }
     });
   } catch (error) {
     console.error('Error processing form submission:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
 
 
 
@@ -364,62 +347,70 @@ app.get('/api/download-all-pdf', async (req, res) => {
   try {
     // Fetch all partnerships from the database
     const sql = 'SELECT * FROM partnership_details';
-    const partnerships = await db.query(sql);
+    const partnerships = await new Promise((resolve, reject) => {
+      db.query(sql, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
 
     // Create a PDF using pdfkit
     const doc = new pdf();
     partnerships.forEach((partnership) => {
       // Customize the PDF content based on your data structure
       // Set font and font size
-      doc.font('Helvetica').fontSize(18);
+    doc.font('Helvetica').fontSize(18);
 
-      // Center-align text
-      const textOptions = { align: 'center' };
+    // Center-align text
+    const textOptions = { align: 'center' };
 
-      // Customize the PDF content based on your data structure
-      doc.text(partnership.partnership_name, { underline: true, bold: true, ...textOptions });
-      doc.moveDown(); // Add some space between lines
-      doc.fontSize(12); // Set font size for the rest of the content
+    // Customize the PDF content based on your data structure
+    doc.text(partnership.partnership_name, { underline: true, bold: true, ...textOptions });
+    doc.moveDown(); // Add some space between lines
+    doc.fontSize(12); // Set font size for the rest of the content
 
-      doc.text(`Description: ${partnership.comment}`);
-      doc.moveDown();
-      doc.text(`College: ${partnership.location}`);
-      doc.moveDown();
-      doc.text(`Category: ${partnership.category}`);
-      doc.moveDown();
-      doc.text(`Partner Type: ${partnership.partner_type}`);
-      doc.moveDown();
-      doc.text(`Industry: ${partnership.industry}`);
-      doc.moveDown();
-      doc.text(`Secondary Partner: ${partnership.secondary_partners}`);
-      doc.moveDown();
-      doc.text(`Duration: ${partnership.duration}`);
+    doc.text(`Description: ${partnership.comment}`);
+    doc.moveDown();
+    doc.text(`College: ${partnership.location}`);
+    doc.moveDown();
+    doc.text(`Category: ${partnership.category}`);
+    doc.moveDown();
+    doc.text(`Partner Type: ${partnership.partner_type}`);
+    doc.moveDown();
+    doc.text(`Industry: ${partnership.industry}`);
+    doc.moveDown();
+    doc.text(`Secondary Partner: ${partnership.secondary_partners}`);
+    doc.moveDown();
+    doc.text(`Duration: ${partnership.duration}`);
 
-      // Format start and end dates
-      const startDate = new Date(partnership.start_date);
-      const endDate = new Date(partnership.end_date);
+    // Format start and end dates
+    const startDate = new Date(partnership.start_date);
+    const endDate = new Date(partnership.end_date);
 
-      const startDateString = startDate.toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      });
+    const startDateString = startDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
 
-      const endDateString = endDate.toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      });
+    const endDateString = endDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
 
-      doc.moveDown();
-      doc.text(`Start Date: ${startDateString}`);
-      doc.moveDown();
-      doc.text(`End Date: ${endDateString}`);
-      doc.moveDown();
+    doc.moveDown();
+    doc.text(`Start Date: ${startDateString}`);
+    doc.moveDown();
+    doc.text(`End Date: ${endDateString}`);
+    doc.moveDown();
 
-      doc.text(`Keywords: ${partnership.keywords}`);
+    doc.text(`Keywords: ${partnership.keywords}`);
       // Add other fields as needed
       doc.moveDown(); // Add space between partnerships
       doc.moveDown(); // Add space between partnerships
@@ -459,13 +450,13 @@ app.get('/api/download-all-pdf', async (req, res) => {
 
 
 
-
 // Endpoint to handle sending an email
 app.post('/api/send-email', async (req, res) => {
   try {
     const { modalId, status } = req.body;
 
     // Fetch the email address associated with the modalId from your database
+    // (Replace this with your actual database logic)
     const email = await getEmailFromDatabase(modalId);
 
     if (!email) {
@@ -475,7 +466,7 @@ app.post('/api/send-email', async (req, res) => {
     // Customize subject and body based on the status
     let subject, body;
     if (status === 'approved') {
-      subject = 'Partnership Approved';
+      subject = 'Partnersip Approved';
       body = `Congratulations,
 
 Your partnership application has been reviewed and we are pleased to let you know that it meets our criteria. Your application will be added to the list partnerships we have.
@@ -486,6 +477,7 @@ Thank you.
 +233-(0)302-213850
                                     P.O. Box LG 1142
                                     Legon, Accra`;
+
     } else if (status === 'pending') {
       subject = 'Partnership Pending';
       body = `Dear sir/madam,,
@@ -505,19 +497,18 @@ Thank you.
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASSWORD,
+        user: 'irondicjonathan@gmail.com', // Replace with your Gmail address
+        pass: 'zsfi avjq dagk joyf', // Replace with your Gmail password
       },
     });
 
     const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: email,
+      from: 'irondicjonathan@gmail.com',
+      to: email, // Use the retrieved email address
       subject: subject,
       text: body,
     };
 
-    // Send the email and handle the result
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Error sending email:', error);
@@ -532,9 +523,7 @@ Thank you.
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
-
+// Simulated database function (replace this with your actual database logic)
 const getEmailFromDatabase = async (modalId) => {
   // Simulate a database query to retrieve the email associated with the modalId
   // Replace 'partnership_details' with your actual table name
@@ -564,6 +553,16 @@ app.get('/api/download/:fileName', (req, res) => {
   // Use appropriate headers
   res.download(filePath);
 });
+
+
+
+
+
+
+
+
+
+
 
 
 
