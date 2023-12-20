@@ -28,6 +28,7 @@ interface FormData {
   end_date: string;
   newKeyword: string;
   keywords: string[];
+
   files: any[];
 }
 
@@ -362,14 +363,14 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         onChange={handleInputChange}
                       />
 
-                      <input
+                      {/* <input
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         type="text"
                         name="duration"
                         placeholder="Duration"
                         value={formData.duration}
                         onChange={handleInputChange}
-                      />
+                      /> */}
 
                       <select
                         id="status"

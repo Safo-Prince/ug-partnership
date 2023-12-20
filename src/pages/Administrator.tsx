@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import AdminTable from "../components/AdminTable";
 import axios from "axios";
 import * as React from "react";
+import Hero from "../components/Hero";
 
 const baseURL = "http://197.255.126.63:3001/loginstatus";
 
@@ -23,8 +24,9 @@ export default function Administrator(props: any) {
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen">
       <Header />
+      <Hero  />
       <AdminTable />
       <Footer />
     </div>

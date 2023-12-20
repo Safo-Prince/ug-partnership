@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {useState} from "react";
+import * as React from "react";
+import { useState } from "react";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import Navigation from "./Navigation";
@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="border-b py-5 sm:py-10">
+    <div className="border-b py-5 sm:py-10  ">
       <div className="w-full  mx-auto max-w-7xl  px-6 lg:px-8 flex  items-center  justify-between  ">
         <img
           src={logo}

@@ -52,7 +52,7 @@ const TableBody: React.FC<Props> = ({ selectedFilter }) => {
   {
     /* @ts-ignore */
   }
-  const handleDownloadPdf = (rowData) => {
+  const handleDownloadPdf = (rowData: any) => {
     downloadPdf(rowData);
   };
 
@@ -102,7 +102,7 @@ const TableBody: React.FC<Props> = ({ selectedFilter }) => {
                 {rowData.status}
               </td>
               {/* Add other columns based on your data structure */}
-              <td className="py-4 pl-4 pr-3 sm:pl-6">
+              <td className="py-4 pl-4 pr-10 sm:pl-6">
                 <div className="flex items-center space-x-1">
                   <Eye
                     onClick={() => {

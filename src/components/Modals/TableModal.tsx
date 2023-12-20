@@ -1,46 +1,44 @@
-import * as React from 'react';
+import * as React from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
-
-
-
-
-
 interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   rowData: {
-    modalData: {
+    modalData?: {
       id: number;
       // other properties...
     } | null;
     // ... other properties
   };
-  
 }
 
 const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   const [modalData, setModalData] = useState(null);
-  {/* @ts-ignore */}
+  {
+    /* @ts-ignore */
+  }
   const [isLoading, setIsLoading] = useState(true);
-  
-
 
   useEffect(() => {
     const fetchModalData = async () => {
       try {
         // Make an API call to fetch additional details for the selected row
-        {/* @ts-ignore */}
-        const response = await fetch(`http://197.255.126.63:3001/api/data/${rowData.id}`);
+        {
+          /* @ts-ignore */
+        }
+        const response = await fetch(
+          `http://197.255.126.63:3001/api/data/${rowData.id}`
+        );
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setModalData(data);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching modal data:', error);
+        console.error("Error fetching modal data:", error);
         setIsLoading(false);
       }
     };
@@ -50,49 +48,43 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
     }
   }, [rowData]);
 
-
   function getFileNameFromPath(filePath: string): string {
-    const parts = filePath.split('/');
+    const parts = filePath.split("/");
     const fileName = parts[parts.length - 1];
     return fileName;
-}
-
-
-  
-  
-
-
+  }
 
   // Function to handle sending the email
-const handleSendEmail = async (status: string) => {
-  try {
-    // Make a request to your server to send the email
-    const response = await fetch('http://197.255.126.63:3001/api/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      
+  const handleSendEmail = async (status: string) => {
+    try {
+      // Make a request to your server to send the email
+      const response = await fetch(
+        "http://197.255.126.63:3001/api/send-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-      
-      body: JSON.stringify({ modalId: rowData.modalData?.id,status: status,
-      }),
-    });
+          body: JSON.stringify({
+            modalId: rowData.modalData?.id,
+            status: status,
+          }),
+        }
+      );
 
-    // Check if the request was successful
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      // Check if the request was successful
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      // Log a success message or handle as needed
+      console.log("Email sent successfully");
+      setOpen(false);
+    } catch (error) {
+      console.error("Error sending email:", error);
     }
-
-    // Log a success message or handle as needed
-    console.log('Email sent successfully');
-    setOpen(false);
-  } catch (error) {
-    console.error('Error sending email:', error);
-  }
-};
-
-
+  };
 
   return (
     <Transition.Root static show={open} as={Fragment}>
@@ -120,7 +112,7 @@ const handleSendEmail = async (status: string) => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6 ">
+              <Dialog.Panel className="relative transform rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-xl sm:p-6 ">
                 <div className="absolute right-0 top-0  pr-4 pt-4 sm:block">
                   <button
                     type="button"
@@ -138,7 +130,7 @@ const handleSendEmail = async (status: string) => {
                       className="text-lg  text-center leading-6 text-gray-900 mt-6 font-medium"
                     >
                       {/* @ts-ignore */}
-                      { modalData && modalData.partnership_name}
+                      {modalData && modalData.partnership_name}
                     </Dialog.Title>
                     <div className="border border-stone-500 mt-3 mb-3 " />
 
@@ -149,7 +141,7 @@ const handleSendEmail = async (status: string) => {
                         </h1>
                         <p className="text-[#56585B] text-left text-xs sm:text-base">
                           {/* @ts-ignore */}
-                        { modalData && modalData.location}
+                          {modalData && modalData.location}
                         </p>
                       </div>
                       <div className="font-lato">
@@ -158,7 +150,7 @@ const handleSendEmail = async (status: string) => {
                         </h1>
                         <p className="text-[#56585B] text-left text-xs sm:text-base">
                           {/* @ts-ignore */}
-                        {modalData && modalData.comment}
+                          {modalData && modalData.comment}
                         </p>
                       </div>
                       <div className="font-lato   ">
@@ -167,7 +159,7 @@ const handleSendEmail = async (status: string) => {
                         </h1>
                         <p className="text-[#56585B] text-xs sm:text-base">
                           {/* @ts-ignore */}
-                        { modalData && modalData.category}
+                          {modalData && modalData.category}
                         </p>
                       </div>
 
@@ -177,7 +169,7 @@ const handleSendEmail = async (status: string) => {
                         </h1>
                         <p className="text-[#56585B]  text-xs sm:text-base">
                           {/* @ts-ignore */}
-                        { modalData && modalData.partner_type}
+                          {modalData && modalData.partner_type}
                         </p>
                       </div>
                       <div className="font-lato">
@@ -186,7 +178,7 @@ const handleSendEmail = async (status: string) => {
                         </h1>
                         <p className="text-[#56585B] text-left text-xs sm:text-base">
                           {/* @ts-ignore */}
-                        { modalData && modalData.duration}
+                          {modalData && modalData.duration}
                         </p>
                       </div>
                       <div className="font-lato">
@@ -196,7 +188,7 @@ const handleSendEmail = async (status: string) => {
                         <p className="text-[#56585B] text-xs sm:text-base">
                           {" "}
                           {/* @ts-ignore */}
-                          { modalData && modalData.status}
+                          {modalData && modalData.status}
                         </p>
                       </div>
                       <div className="font-lato">
@@ -204,29 +196,39 @@ const handleSendEmail = async (status: string) => {
                           Relevant Files
                         </h1>
                         {/* @ts-ignore */}
-                        {modalData && modalData.files && modalData.files.split(',').map((filePath: string, index: number) => (
-                            <p key={index} className="text-[#007BFF] text-left text-xs sm:text-base">
-                              <a href={`http://197.255.126.63:3001/api/download/${getFileNameFromPath(filePath)}`} download>
-                                {getFileNameFromPath(filePath)}
-                              </a>
-                            </p>
-                          ))}
-
-
+                        {modalData &&
+                          modalData.files &&
+                          modalData.files
+                            .split(",")
+                            .map((filePath: string, index: number) => (
+                              <p
+                                key={index}
+                                className="text-[#007BFF] text-left text-xs sm:text-base"
+                              >
+                                <a
+                                  href={`http://197.255.126.63:3001/api/download/${getFileNameFromPath(
+                                    filePath
+                                  )}`}
+                                  download
+                                >
+                                  {getFileNameFromPath(filePath)}
+                                </a>
+                              </p>
+                            ))}
                       </div>
                     </div>
 
                     <div className="flex justify-around mt-5 space-x-5">
-                    <button
+                      <button
                         className="rounded-md bg-[#153D6D] w-full py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#48627f]"
-                        onClick={() => handleSendEmail('approved')} // Pass 'approved' for the accept button
+                        onClick={() => handleSendEmail("approved")} // Pass 'approved' for the accept button
                       >
                         Accept
                       </button>
 
                       <button
                         className="rounded-md bg-[#F46969] w-full py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#f19494]  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        onClick={() => handleSendEmail('pending')} // Pass 'pending' for the pending button
+                        onClick={() => handleSendEmail("pending")} // Pass 'pending' for the pending button
                       >
                         Pending
                       </button>

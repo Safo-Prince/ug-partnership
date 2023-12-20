@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { ArrowRight, ArrowLeft } from "iconsax-react";
 
 const Pagination: React.FC = () => {
