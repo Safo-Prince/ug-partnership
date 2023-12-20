@@ -296,39 +296,41 @@ const generateAndSendPdf = async (id, res) => {
 
 
 // New endpoint for generating and downloading PDF
-app.get('/api/download-pdf/:id', (req, res) => {
+app.get('/api/download-pdf/:id', async (req, res) => {
   const { id } = req.params;
 
   // Check if the file exists
   const filePath = path.join(__dirname, 'pdfs', `${id}.pdf`);
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      // File doesn't exist, generate and send the PDF
-      generateAndSendPdf(id, res);
-      // Schedule file deletion after a minute
-        setTimeout(() => {
-          fs.unlink(filePath, (unlinkErr) => {
-            if (unlinkErr) {
-              console.error('Error deleting file:', unlinkErr);
-            } else {
-              console.log('File deleted successfully');
-            }
-          });
-        }, 20000); // 60000 milliseconds = 1 minute
-    } else {
-      // File exists, send it directly
-      console.log('Existing PDF path (Server):', filePath);
-      res.sendFile(filePath, (err) => {
-        if (err) {
-          console.error('Error sending file:', err);
-          res.status(500).send('Internal Server Error');
-        } else {
-          console.log('File sent successfully');
-        }
-      });
-    }
-  });
+
+  try {
+    await fs.promises.access(filePath, fs.constants.F_OK);
+
+    // File exists, send it directly
+    console.log('Existing PDF path (Server):', filePath);
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error('Error sending file:', err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        console.log('File sent successfully');
+      }
+    });
+  } catch (err) {
+    // File doesn't exist, generate and send the PDF
+    await generateAndSendPdf(id, res);
+
+    // Schedule file deletion after a minute
+    setTimeout(async () => {
+      try {
+        await fs.promises.unlink(filePath);
+        console.log('File deleted successfully');
+      } catch (unlinkErr) {
+        console.error('Error deleting file:', unlinkErr);
+      }
+    }, 20000); // 20000 milliseconds = 20 seconds
+  }
 });
+
 
 
 
@@ -337,70 +339,62 @@ app.get('/api/download-all-pdf', async (req, res) => {
   try {
     // Fetch all partnerships from the database
     const sql = 'SELECT * FROM partnership_details';
-    const partnerships = await new Promise((resolve, reject) => {
-      db.query(sql, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+    const partnerships = await db.query(sql);
 
     // Create a PDF using pdfkit
     const doc = new pdf();
     partnerships.forEach((partnership) => {
       // Customize the PDF content based on your data structure
       // Set font and font size
-    doc.font('Helvetica').fontSize(18);
+      doc.font('Helvetica').fontSize(18);
 
-    // Center-align text
-    const textOptions = { align: 'center' };
+      // Center-align text
+      const textOptions = { align: 'center' };
 
-    // Customize the PDF content based on your data structure
-    doc.text(partnership.partnership_name, { underline: true, bold: true, ...textOptions });
-    doc.moveDown(); // Add some space between lines
-    doc.fontSize(12); // Set font size for the rest of the content
+      // Customize the PDF content based on your data structure
+      doc.text(partnership.partnership_name, { underline: true, bold: true, ...textOptions });
+      doc.moveDown(); // Add some space between lines
+      doc.fontSize(12); // Set font size for the rest of the content
 
-    doc.text(`Description: ${partnership.comment}`);
-    doc.moveDown();
-    doc.text(`College: ${partnership.location}`);
-    doc.moveDown();
-    doc.text(`Category: ${partnership.category}`);
-    doc.moveDown();
-    doc.text(`Partner Type: ${partnership.partner_type}`);
-    doc.moveDown();
-    doc.text(`Industry: ${partnership.industry}`);
-    doc.moveDown();
-    doc.text(`Secondary Partner: ${partnership.secondary_partners}`);
-    doc.moveDown();
-    doc.text(`Duration: ${partnership.duration}`);
+      doc.text(`Description: ${partnership.comment}`);
+      doc.moveDown();
+      doc.text(`College: ${partnership.location}`);
+      doc.moveDown();
+      doc.text(`Category: ${partnership.category}`);
+      doc.moveDown();
+      doc.text(`Partner Type: ${partnership.partner_type}`);
+      doc.moveDown();
+      doc.text(`Industry: ${partnership.industry}`);
+      doc.moveDown();
+      doc.text(`Secondary Partner: ${partnership.secondary_partners}`);
+      doc.moveDown();
+      doc.text(`Duration: ${partnership.duration}`);
 
-    // Format start and end dates
-    const startDate = new Date(partnership.start_date);
-    const endDate = new Date(partnership.end_date);
+      // Format start and end dates
+      const startDate = new Date(partnership.start_date);
+      const endDate = new Date(partnership.end_date);
 
-    const startDateString = startDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
+      const startDateString = startDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
 
-    const endDateString = endDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
+      const endDateString = endDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
 
-    doc.moveDown();
-    doc.text(`Start Date: ${startDateString}`);
-    doc.moveDown();
-    doc.text(`End Date: ${endDateString}`);
-    doc.moveDown();
+      doc.moveDown();
+      doc.text(`Start Date: ${startDateString}`);
+      doc.moveDown();
+      doc.text(`End Date: ${endDateString}`);
+      doc.moveDown();
 
-    doc.text(`Keywords: ${partnership.keywords}`);
+      doc.text(`Keywords: ${partnership.keywords}`);
       // Add other fields as needed
       doc.moveDown(); // Add space between partnerships
       doc.moveDown(); // Add space between partnerships
@@ -440,13 +434,13 @@ app.get('/api/download-all-pdf', async (req, res) => {
 
 
 
+
 // Endpoint to handle sending an email
 app.post('/api/send-email', async (req, res) => {
   try {
     const { modalId, status } = req.body;
 
     // Fetch the email address associated with the modalId from your database
-    // (Replace this with your actual database logic)
     const email = await getEmailFromDatabase(modalId);
 
     if (!email) {
@@ -456,7 +450,7 @@ app.post('/api/send-email', async (req, res) => {
     // Customize subject and body based on the status
     let subject, body;
     if (status === 'approved') {
-      subject = 'Partnersip Approved';
+      subject = 'Partnership Approved';
       body = `Congratulations,
 
 Your partnership application has been reviewed and we are pleased to let you know that it meets our criteria. Your application will be added to the list partnerships we have.
@@ -467,7 +461,6 @@ Thank you.
 +233-(0)302-213850
                                     P.O. Box LG 1142
                                     Legon, Accra`;
-
     } else if (status === 'pending') {
       subject = 'Partnership Pending';
       body = `Dear sir/madam,,
@@ -487,18 +480,19 @@ Thank you.
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'irondicjonathan@gmail.com', // Replace with your Gmail address
-        pass: 'zsfi avjq dagk joyf', // Replace with your Gmail password
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASSWORD,
       },
     });
 
     const mailOptions = {
-      from: 'irondicjonathan@gmail.com',
-      to: email, // Use the retrieved email address
+      from: process.env.GMAIL_USER,
+      to: email,
       subject: subject,
       text: body,
     };
 
+    // Send the email and handle the result
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Error sending email:', error);
@@ -513,7 +507,9 @@ Thank you.
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-// Simulated database function (replace this with your actual database logic)
+
+
+
 const getEmailFromDatabase = async (modalId) => {
   // Simulate a database query to retrieve the email associated with the modalId
   // Replace 'partnership_details' with your actual table name
@@ -543,16 +539,6 @@ app.get('/api/download/:fileName', (req, res) => {
   // Use appropriate headers
   res.download(filePath);
 });
-
-
-
-
-
-
-
-
-
-
 
 
 
