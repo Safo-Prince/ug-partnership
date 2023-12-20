@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -42,12 +42,12 @@ const MobileMenu: React.FC<Props> = ({ onOpen, open }) => {
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
                         <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                          TravGuard
+                          ORID
                         </Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
-                            className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#153D6D] focus:ring-offset-2"
                             onClick={() => onOpen(false)}
                           >
                             <span className="absolute -inset-2.5" />
