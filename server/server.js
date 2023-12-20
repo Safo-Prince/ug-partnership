@@ -1,7 +1,7 @@
 const express = require('express');
 const authRoutes = require('./authRoutes'); // Adjust the path as needed
 const bodyParser = require('body-parser');
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2');
 const cors = require('cors');
 const pdf = require('pdfkit');
 const fs = require('fs');
