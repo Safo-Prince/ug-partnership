@@ -73,7 +73,7 @@ app.get('/api/data/:id', async (req, res) => {
 
   try {
     // Use the promise-based API to execute the query
-    const [result] = await connection.promise().query(sql, [id]);
+    const [result] = await db.promise().query(sql, [id]);
 
     if (result.length > 0) {
       console.log('Data fetched from MySQL:', result);
