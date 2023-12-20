@@ -60,7 +60,7 @@ app.get('/api/data', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   } finally {
     // Close the connection after executing the query
-    connection.end();
+    db.end();
   }
 });
 
@@ -85,7 +85,7 @@ app.get('/api/data/:id', async (req, res) => {
     console.error('Error fetching data from MySQL:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   } finally {
-    connection.end();
+    db.end();
   }
 });
 
@@ -356,17 +356,9 @@ app.get('/api/download-pdf/:id', async (req, res) => {
 // New endpoint for generating and downloading PDF for all partnerships
 app.get('/api/download-all-pdf', async (req, res) => {
   try {
-    // Fetch all partnerships from the database
+    // Fetch all partnerships from the database using promises
     const sql = 'SELECT * FROM partnership_details';
-    const partnerships = await new Promise((resolve, reject) => {
-      db.query(sql, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+    const partnerships = await db.promise().query(sql);
 
     // Create a PDF using pdfkit
     const doc = new pdf();
@@ -467,7 +459,6 @@ app.post('/api/send-email', async (req, res) => {
     const { modalId, status } = req.body;
 
     // Fetch the email address associated with the modalId from your database
-    // (Replace this with your actual database logic)
     const email = await getEmailFromDatabase(modalId);
 
     if (!email) {
@@ -477,7 +468,7 @@ app.post('/api/send-email', async (req, res) => {
     // Customize subject and body based on the status
     let subject, body;
     if (status === 'approved') {
-      subject = 'Partnersip Approved';
+      subject = 'Partnership Approved';
       body = `Congratulations,
 
 Your partnership application has been reviewed and we are pleased to let you know that it meets our criteria. Your application will be added to the list partnerships we have.
@@ -488,7 +479,6 @@ Thank you.
 +233-(0)302-213850
                                     P.O. Box LG 1142
                                     Legon, Accra`;
-
     } else if (status === 'pending') {
       subject = 'Partnership Pending';
       body = `Dear sir/madam,,
@@ -504,7 +494,7 @@ Thank you.
       return res.status(400).json({ error: 'Invalid status provided' });
     }
 
-    // Use nodemailer to send the email
+    // Use nodemailer's createTransport to create a transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -513,6 +503,7 @@ Thank you.
       },
     });
 
+    // Create mail options
     const mailOptions = {
       from: 'irondicjonathan@gmail.com',
       to: email, // Use the retrieved email address
@@ -520,39 +511,35 @@ Thank you.
       text: body,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Error sending email:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        console.log('Email sent:', info.response);
-        res.status(200).json({ message: 'Email sent successfully' });
-      }
-    });
+    // Use nodemailer's sendMail with await to work with promises
+    const info = await transporter.sendMail(mailOptions);
+
+    console.log('Email sent:', info.response);
+    res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
     console.error('Error processing email request:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 // Simulated database function (replace this with your actual database logic)
 const getEmailFromDatabase = async (modalId) => {
   // Simulate a database query to retrieve the email associated with the modalId
-  // Replace 'partnership_details' with your actual table name
   const query = 'SELECT email FROM partnership_details WHERE id = ?';
 
-  return new Promise((resolve, reject) => {
-    db.query(query, [modalId], (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        // Assuming the 'email' column contains the email address
-        const email = results[0] ? results[0].email : null;
-        resolve(email);
-        console.log(email)
-      }
-    });
-  });
+  try {
+    const results = await db.promise().query(query, [modalId]);
+
+    // Assuming the 'email' column contains the email address
+    const email = results[0][0] ? results[0][0].email : null;
+    console.log(email);
+    return email;
+  } catch (err) {
+    console.error('Error fetching email from database:', err);
+    throw err;
+  }
 };
+
 
 
 
@@ -564,17 +551,6 @@ app.get('/api/download/:fileName', (req, res) => {
   // Use appropriate headers
   res.download(filePath);
 });
-
-
-
-
-
-
-
-
-
-
-
 
 
 
