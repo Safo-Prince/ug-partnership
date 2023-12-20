@@ -209,18 +209,22 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
 
 
 
+
+const fetchDataById = async (id) => {
+  const sql = 'SELECT * FROM partnership_details WHERE id = ?';
+  const [result] = await db.promise().query(sql, [id]);
+  db.end();
+  return result;
+};
 const generateAndSendPdf = async (id, res) => {
   try {
-    // Fetch data based on the ID (reuse your existing endpoint logic)
-    const sql = 'SELECT * FROM partnership_details WHERE id = ?';
-    const [result] = await db.query(sql, [id]);
+    const result = await fetchDataById(id);
 
     if (result.length === 0) {
       res.status(404).send('Data not found');
       return;
     }
 
-    // Assuming result is an array with a single object
     const rowData = result[0];
 
     // Create a PDF using pdfkit
