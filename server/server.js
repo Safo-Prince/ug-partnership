@@ -72,7 +72,8 @@ app.get('/api/data/:id', async (req, res) => {
   const sql = 'SELECT * FROM partnership_details WHERE id = ?';
 
   try {
-    const [result] = await db.query(sql, [id]);
+    // Use the promise-based API to execute the query
+    const [result] = await connection.promise().query(sql, [id]);
 
     if (result.length > 0) {
       console.log('Data fetched from MySQL:', result);
@@ -83,9 +84,10 @@ app.get('/api/data/:id', async (req, res) => {
   } catch (err) {
     console.error('Error fetching data from MySQL:', err);
     res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    connection.end();
   }
 });
-
 
 
 // Set up multer storage and file naming
