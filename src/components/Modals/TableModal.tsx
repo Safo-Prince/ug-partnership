@@ -21,6 +21,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   {
     /* @ts-ignore */
   }
+  /* @ts-ignore */
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,9 +31,8 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
         {
           /* @ts-ignore */
         }
-        const response = await fetch(
-          `http://197.255.126.63:3001/api/data/${rowData.id}`
-        );
+        /* @ts-ignore */
+        const response = await fetch(`http://197.255.126.63:3001/api/data/${rowData.id}`);
         const data = await response.json();
         console.log(data);
         setModalData(data);
@@ -196,11 +196,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
                           Relevant Files
                         </h1>
                         {/* @ts-ignore */}
-                        {modalData &&
-                          modalData.files &&
-                          modalData.files
-                            .split(",")
-                            .map((filePath: string, index: number) => (
+                        {modalData && modalData.files && modalData.files.split(",").map((filePath: string, index: number) => (
                               <p
                                 key={index}
                                 className="text-[#007BFF] text-left text-xs sm:text-base"

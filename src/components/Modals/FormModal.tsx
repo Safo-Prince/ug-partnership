@@ -2,6 +2,7 @@ import * as React from "react";
 {
   /* @ts-ignore */
 }
+/* @ts-ignore */
 import { Children, FormEvent, Fragment, useState, ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -147,6 +148,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
           {
             /* @ts-ignore */
           }
+          /* @ts-ignore */
           formDataToSend.append(key, formData[key]);
         }
       });
@@ -157,7 +159,8 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
       });
 
       if (response.ok) {
-        console.log("Form submitted successfully");
+        const responseData = await response.json(); // Parse JSON response
+        console.log("Form submitted successfully:", responseData.message);
         setOpen(false);
         setButtonText("submit");
         // Refresh the page to clear input fields

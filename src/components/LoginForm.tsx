@@ -9,6 +9,7 @@ const LoginForm: React.FC = () => {
   {
     /* @ts-ignore */
   }
+  /* @ts-ignore */
   const [loginError, setLoginError] = useState(false);
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();

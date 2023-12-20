@@ -137,7 +137,9 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
       res.status(500).send('Internal Server Error');
     } else {
       console.log('Data inserted into MySQL:', result);
-      res.status(200).send('Form submitted successfully');
+      // Instead of res.status(200).send('Form submitted successfully');
+      res.status(200).json({ message: 'Form submitted successfully' });
+
 
       // Create a nodemailer transporter
       // Use nodemailer to send the email

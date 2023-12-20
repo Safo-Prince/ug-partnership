@@ -4,6 +4,7 @@ import { Eye, Trash } from "iconsax-react";
 import { FileMinus } from "@phosphor-icons/react";
 import TableModal from "./Modals/TableModal";
 import TableShimmer from "./shimmers/TableShimmer";
+{/* @ts-ignore */}
 import Filter from "./Filter"; // Import the Filter component
 import { downloadPdf } from "./pdfUtils";
 
@@ -61,10 +62,7 @@ const TableBody: React.FC<Props> = ({ selectedFilter }) => {
     <>
       {/* <Filter onSelectFilter={handleSelectFilter} /> */}
       {/* @ts-ignore */}
-      <TableModal
-        open={openModal}
-        setOpen={setOpenModal}
-        rowData={selectedRow}
+      <TableModal open={openModal} setOpen={setOpenModal} rowData={selectedRow}
       />
 
       {isLoading ? (

@@ -10,6 +10,7 @@ const baseURL = "http://197.255.126.63:3001/loginstatus";
 {
   /* @ts-ignore */
 }
+/* @ts-ignore */
 export default function Administrator(props: any) {
   const [authStatus, setAuthStatus] = React.useState(null);
   React.useEffect(() => {
