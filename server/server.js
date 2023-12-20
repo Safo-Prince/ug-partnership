@@ -41,7 +41,8 @@ app.use(bodyParser.json());
 
 
 // Endpoint to fetch data from MySQL and serve as JSON
-app.get('/api/data',async (req, res) => {
+
+app.get('/api/data', async (req, res) => {
   let sql = 'SELECT * FROM partnership_details';
 
   // Check for filter query parameter
@@ -51,11 +52,15 @@ app.get('/api/data',async (req, res) => {
   }
 
   try {
-    const [result] = await db.query(sql);
+    // Use the promise-based API to execute the query
+    const [result] = await db.promise().query(sql);
     res.status(200).json(result);
   } catch (err) {
     console.error('Error fetching data from MySQL:', err);
     res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    // Close the connection after executing the query
+    connection.end();
   }
 });
 
