@@ -138,6 +138,8 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
         return;
       }
 
+      console.log('Connection acquired:', connection.threadId);
+
       // Perform the database insertion
       connection.query(sql, insertData, async (err, result) => {
         // Release the connection back to the pool
