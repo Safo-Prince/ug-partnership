@@ -62,19 +62,25 @@ app.get('/api/data',async (req, res) => {
 
 
 // Modify your existing endpoint to handle fetching data for a specific row
-app.get('/api/data/:id', (req, res) => {
+app.get('/api/data/:id', async (req, res) => {
   const { id } = req.params;
   const sql = 'SELECT * FROM partnership_details WHERE id = ?';
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('Error fetching data from MySQL:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    } else {
+
+  try {
+    const [result] = await db.query(sql, [id]);
+
+    if (result.length > 0) {
       console.log('Data fetched from MySQL:', result);
-      res.status(200).json(result[0]); // Assuming result is an array with a single object
+      res.status(200).json(result[0]);
+    } else {
+      res.status(404).json({ error: 'Data not found' });
     }
-  });
+  } catch (err) {
+    console.error('Error fetching data from MySQL:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
+
 
 
 // Set up multer storage and file naming
@@ -188,23 +194,22 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
 
 
 
-const generateAndSendPdf = (id, res) => {
-  // Fetch data based on the ID (you can reuse your existing endpoint logic)
-  const sql = 'SELECT * FROM partnership_details WHERE id = ?';
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('Error fetching data from MySQL:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
+const generateAndSendPdf = async (id, res) => {
+  try {
+    // Fetch data based on the ID (reuse your existing endpoint logic)
+    const sql = 'SELECT * FROM partnership_details WHERE id = ?';
+    const [result] = await db.query(sql, [id]);
+
+    if (result.length === 0) {
+      res.status(404).send('Data not found');
       return;
     }
 
     // Assuming result is an array with a single object
     const rowData = result[0];
 
-    // Check if rowData exists
-    if (rowData) {
-      // Create a PDF using pdfkit
-      const doc = new pdf();
+    // Create a PDF using pdfkit
+    const doc = new pdf();
 
     // Set font and font size
     doc.font('Helvetica').fontSize(18);
@@ -257,35 +262,33 @@ const generateAndSendPdf = (id, res) => {
 
     doc.text(`Keywords: ${rowData.keywords}`);
 
-    
+    // Add other fields as needed
 
-      // Add other fields as needed
+    // Save the PDF to a file (or stream it directly to the response)
+    const filePath = path.join(__dirname, 'pdfs', `${id}.pdf`);
+    doc.pipe(fs.createWriteStream(filePath));
 
-      // Save the PDF to a file (or stream it directly to the response)
-      const filePath = path.join(__dirname, 'pdfs', `${id}.pdf`);
-      doc.pipe(fs.createWriteStream(filePath));
+    // Ensure the file is closed before continuing
+    await new Promise((resolve) => doc.end(resolve));
 
-      // Ensure the file is closed and the response is sent after the PDF is generated
-      doc.end(() => {
-        // Log the file path on the server side
-        console.log('Generated PDF path (Server):', filePath);
+    // Log the file path on the server side
+    console.log('Generated PDF path (Server):', filePath);
 
-        // Send the file
-        res.sendFile(filePath, (err) => {
-          if (err) {
-            console.error('Error sending file:', err);
-            res.status(500).send('Internal Server Error');
-          } else {
-            console.log('File sent successfully');
-          }
-        });
-      });
-    } else {
-      // No data found for the given ID
-      res.status(404).send('Data not found');
-    }
-  });
+    // Send the file
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error('Error sending file:', err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        console.log('File sent successfully');
+      }
+    });
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    res.status(500).send('Internal Server Error');
+  }
 };
+
 
 
 

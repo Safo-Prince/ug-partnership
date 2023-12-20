@@ -14,7 +14,7 @@ interface Props {
 const TableBody: React.FC<Props> = ({ selectedFilter }) => {
   //const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState<any[]>([]);
   //const [todayDate, setTodayDate] = useState('');
   // const [selectedFilter, setSelectedFilter] = useState("");
   const [selectedRow, setSelectedRow] = useState(null); // Track the selected row
@@ -28,12 +28,13 @@ const TableBody: React.FC<Props> = ({ selectedFilter }) => {
           `http://197.255.126.63:3001/api/data?filter=${selectedFilter}`
         );
         const data = await response.json();
-
+  
+        // Ensure data is an array
+        const dataArray = Array.isArray(data) ? data : [data];
+  
         // Sort the data based on the 'id' property in descending order
-        const sortedData = data.sort(
-          (a: { id: number }, b: { id: number }) => b.id - a.id
-        );
-
+        const sortedData = dataArray.sort((a, b) => b.id - a.id);
+  
         setTableData(sortedData);
         setIsLoading(false);
       } catch (error) {
