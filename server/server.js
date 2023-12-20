@@ -105,7 +105,6 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
   // Convert keywords array to CSV string
   const keywordsCSV = Array.isArray(formData.keywords) ? formData.keywords.join(',') : '';
 
-
   // Log form data to console
   console.log('Form Data:', formData);
 
@@ -115,83 +114,91 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
   // Your existing MySQL query and data insertion code
   const sql = 'INSERT INTO partnership_details SET ?';
 
-    // Get the current date
-    const currentDate = new Date();
+  // Get the current date
+  const currentDate = new Date();
 
-    // Convert the date to a string in the format 'DD-MM-YYYY'
-    const uploadDate = format(currentDate, 'dd-MM-yyyy');
+  // Convert the date to a string in the format 'DD-MM-YYYY'
+  const uploadDate = format(currentDate, 'dd-MM-yyyy');
 
   const insertData = { ...formData, keywords: keywordsCSV, approved: false, upload_date: uploadDate };
 
-  
   // Assuming you have a property named 'files' in formData
   if (req.files) {
     // Add the file paths to the insertData object
     insertData.files = req.files.map(file => file.path).join(', ');
   }
 
-  // Your existing MySQL query and data insertion code
-  db.query(sql, insertData, async (err, result) => {
-    if (err) {
-      console.error('Error inserting data into MySQL:', err);
-      res.status(500).send('Internal Server Error');
-    } else {
-      console.log('Data inserted into MySQL:', result);
-      // Instead of res.status(200).send('Form submitted successfully');
-      res.status(200).json({ message: 'Form submitted successfully' });
+  try {
+    // Perform the database insertion
+    db.query(sql, insertData, async (err, result) => {
+      if (err) {
+        console.error('Error inserting data into MySQL:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        console.log('Data inserted into MySQL:', result);
 
+        // Create a nodemailer transporter
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'irondicjonathan@gmail.com',
+            pass: 'zsfi avjq dagk joyf',
+          },
+        });
 
-      // Create a nodemailer transporter
-      // Use nodemailer to send the email
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'irondicjonathan@gmail.com', // Replace with your Gmail address
-          pass: 'zsfi avjq dagk joyf', // Replace with your Gmail password
-        },
-      });
+        // Send email to the email address in the form data
+        const userMailOptions = {
+          from: 'irondicjonathan@gmail.com',
+          to: formData.email,
+          subject: 'Partnership Received',
+          text: `Dear Sir/Madam,
 
-      // Send email to the email address in the form data
-      const userMailOptions = {
-        from: 'irondicjonathan@gmail.com',
-        to: formData.email, // Use the email from form data
-        subject: 'Partnership Received',
-        text: `Dear Sir/Madam,
+          Your partnership application has been submitted.
+          We will revert in due time.        
+          Thank you.
+          
+          +233-(0)303-930436                                     orid@ug.edu.gh
+          +233-(0)302-213850
+                                          P.O. Box LG 1142
+                                          Legon, Accra`,
+        };
 
-        Your partnership application has been submitted.
-        We will revert in due time.        
-        Thank you.
-        
-        +233-(0)303-930436                                     orid@ug.edu.gh
-        +233-(0)302-213850
-                                            P.O. Box LG 1142
-                                            Legon, Accra`, // Add your email body here
-      };
+        try {
+          // Perform the email sending to user
+          await transporter.sendMail(userMailOptions);
+          console.log('Email sent to user successfully');
 
-      try {
-        await transporter.sendMail(userMailOptions);
-        console.log('Email sent to user successfully');
-      } catch (emailError) {
-        console.error('Error sending email to user:', emailError);
+          // Send email to the statically provided email
+          const adminMailOptions = {
+            from: 'irondicjonathan@gmail',
+            to: 'mikesaxxmusic@gmail.com',
+            subject: 'Subject for admin',
+            text: 'A new Partnership has been uploaded',
+          };
+
+          try {
+            // Perform the email sending to admin
+            await transporter.sendMail(adminMailOptions);
+            console.log('Email sent to admin successfully');
+
+            // Respond to the client only after all asynchronous operations are completed
+            res.status(200).json({ message: 'Form submitted successfully' });
+          } catch (adminEmailError) {
+            console.error('Error sending email to admin:', adminEmailError);
+            res.status(500).json({ error: 'Internal Server Error' });
+          }
+        } catch (emailError) {
+          console.error('Error sending email to user:', emailError);
+          res.status(500).json({ error: 'Internal Server Error' });
+        }
       }
-
-      // Send email to the statically provided email
-      const adminMailOptions = {
-        from: 'irondicjonathan@gmail',
-        to: 'mikesaxxmusic@gmail.com', // Use your admin email
-        subject: 'Subject for admin',
-        text: 'A new Partnership has been uploaded', // Add your email body here
-      };
-
-      try {
-        await transporter.sendMail(adminMailOptions);
-        console.log('Email sent to admin successfully');
-      } catch (adminEmailError) {
-        console.error('Error sending email to admin:', adminEmailError);
-      }
-    }
-  });
+    });
+  } catch (error) {
+    console.error('Error processing form submission:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
+
 
 
 
