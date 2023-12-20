@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { useState } from "react";
 import deloitte from "../assets/deloitte.png";
 import tullow from "../assets/tullow-oil.png";
@@ -50,12 +50,7 @@ const Main: React.FC = () => {
           <div className="max-w-[1300px] flex justify-around sm:mt-10 mt-5 ">
             <img src={deloitte} alt="deloitte" className="sm:w-32 w-14" />
             <img src={GNPC} alt="dgnpc" className="sm:w-32 w-16" />
-            <img src={german} alt="german" className="sm:w-44 w-16 " />
-            <img
-              src={masterCard}
-              alt="master-card"
-              className="sm:w-44 h-auto  w-16"
-            />
+
             <img src={tullow} alt="tullow" className="sm:w-32 w-20 " />
 
             <FormModal open={open} setOpen={setOpen} />

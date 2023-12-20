@@ -1,6 +1,5 @@
-import * as React from 'react';
+import * as React from "react";
 import { FileMinus } from "@phosphor-icons/react";
-
 
 interface FilterProps {
   onSelectFilter: (filter: string) => void;
@@ -14,23 +13,25 @@ const Filter: React.FC<FilterProps> = ({ onSelectFilter }) => {
   const handleDownloadAllPdf = async () => {
     try {
       // Make a request to your server to generate and download the PDF for all partnerships
-      const response = await fetch('http://197.255.126.63:3001/api/download-all-pdf');
-  
+      const response = await fetch(
+        "http://197.255.126.63:3001/api/download-all-pdf"
+      );
+
       // Check if the request was successful
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-  
+
       // Get the blob data from the response
       const blob = await response.blob();
-  
+
       // Create a download link and trigger the download
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
-      link.download = 'all_partnerships.pdf';
+      link.download = "all_partnerships.pdf";
       link.click();
     } catch (error) {
-      console.error('Error downloading all PDFs:', error);
+      console.error("Error downloading all PDFs:", error);
     }
   };
 
@@ -40,7 +41,7 @@ const Filter: React.FC<FilterProps> = ({ onSelectFilter }) => {
       <select
         id="filter"
         name="filter"
-        className="mt-2 block self-center mb-2.5 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        className="mt-2 block self-center mb-2.5 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
         defaultValue="choose filter ..."
         onChange={handleFilterChange}
       >
