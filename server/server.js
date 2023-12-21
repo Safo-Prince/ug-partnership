@@ -556,7 +556,6 @@ const generateAndSendAllPdf = async (res) => {
 
 // New endpoint for generating and downloading PDF for all rows
 app.get('/api/download-all-pdf', async (req, res) => {
-  console.log('Received request for /api/download-all-pdf');
   await generateAndSendAllPdf(res);
 });
 
