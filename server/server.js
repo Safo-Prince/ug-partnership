@@ -352,13 +352,108 @@ app.get('/api/download-pdf/:id', async (req, res) => {
 
 
 
+const generateAndSendAllPdf = async (res) => {
+  try {
+    const sql = 'SELECT * FROM partnership_details';
+    const [results] = await db.promise().query(sql);
 
+    if (results.length === 0) {
+      res.status(404).send('No data found');
+      return;
+    }
 
+    // Create a PDF using pdfkit
+    const doc = new pdf();
 
+    // Set font and font size
+    doc.font('Helvetica').fontSize(18);
 
+    // Center-align text
+    const textOptions = { align: 'center' };
 
+    // Loop through each row and add content to the PDF
+    results.forEach((rowData, index) => {
+      // Add a page break for all rows except the first
+      if (index !== 0) {
+        doc.addPage();
+      }
 
+      doc.text(rowData.partnership_name, { underline: true, bold: true, ...textOptions });
+      doc.moveDown();
+      doc.fontSize(12);
 
+      // Customize the PDF content based on your data structure
+      doc.text(`Description: ${rowData.comment}`);
+      doc.moveDown();
+      doc.text(`College: ${rowData.location}`);
+      doc.moveDown();
+      doc.text(`Category: ${rowData.category}`);
+      doc.moveDown();
+      doc.text(`Partner Type: ${rowData.partner_type}`);
+      doc.moveDown();
+      doc.text(`Industry: ${rowData.industry}`);
+      doc.moveDown();
+      doc.text(`Secondary Partner: ${rowData.secondary_partners}`);
+      doc.moveDown();
+      doc.text(`Duration: ${rowData.duration}`);
+
+      // Format start and end dates
+      const startDate = new Date(rowData.start_date);
+      const endDate = new Date(rowData.end_date);
+
+      const startDateString = startDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
+
+      const endDateString = endDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
+
+      doc.moveDown();
+      doc.text(`Start Date: ${startDateString}`);
+      doc.moveDown();
+      doc.text(`End Date: ${endDateString}`);
+      doc.moveDown();
+
+      doc.text(`Keywords: ${rowData.keywords}`);
+      // Add other fields as needed
+    });
+
+    // Save the PDF to a file (or stream it directly to the response)
+    const filePath = path.join(__dirname, 'pdfs', 'all_rows.pdf');
+    doc.pipe(fs.createWriteStream(filePath));
+
+    // Ensure the file is closed before continuing
+    await new Promise((resolve) => doc.end(resolve));
+
+    // Log the file path on the server side
+    console.log('Generated PDF path (Server):', filePath);
+
+    // Send the file
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error('Error sending file:', err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        console.log('File sent successfully');
+      }
+    });
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+// New endpoint for generating and downloading PDF for all rows
+app.get('/api/download-all-pdf', async (req, res) => {
+  await generateAndSendAllPdf(res);
+});
 
 
 
