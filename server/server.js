@@ -60,7 +60,7 @@ app.get('/api/data', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   } finally {
     // Close the connection after executing the query
-    db.end();
+    //db.end();
   }
 });
 
@@ -85,7 +85,7 @@ app.get('/api/data/:id', async (req, res) => {
     console.error('Error fetching data from MySQL:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   } finally {
-    db.end();
+    //db.end();
   }
 });
 
@@ -213,7 +213,7 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
 const fetchDataById = async (id) => {
   const sql = 'SELECT * FROM partnership_details WHERE id = ?';
   const [result] = await db.promise().query(sql, [id]);
-  db.end();
+  //db.end();
   return result;
 };
 const generateAndSendPdf = async (id, res) => {
@@ -444,7 +444,7 @@ const getEmailFromDatabase = async (modalId) => {
 
   try {
     const results = await db.promise().query(query, [modalId]);
-    db.end()
+    //db.end()
 
     // Assuming the 'email' column contains the email address
     const email = results[0][0] ? results[0][0].email : null;
