@@ -39,6 +39,9 @@ export const downloadPdf = async (rowData) => {
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
+
+      // Log the file path on the client side
+      console.log('Received PDF path (Client):', response.url);
   
       // Get the blob data from the response
       const blob = await response.blob();
