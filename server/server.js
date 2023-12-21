@@ -461,6 +461,7 @@ const generateAndSendAllPdf = async (res) => {
     console.log("generating")
     const sql = 'SELECT * FROM partnership_details';
     const [results] = await db.promise().query(sql);
+    console.log(results)
 
     if (results.length === 0) {
       res.status(404).send('No data found');
