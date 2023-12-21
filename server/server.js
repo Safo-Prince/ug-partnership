@@ -445,6 +445,7 @@ const getEmailFromDatabase = async (modalId) => {
 
   try {
     const results = await db.promise().query(query, [modalId]);
+    console.log(results)
 
     // Assuming the 'email' column contains the email address
     const email = results[0][0] ? results[0][0].email : null;
