@@ -372,9 +372,12 @@ app.get('/api/download-pdf/:id', async (req, res) => {
 // Endpoint to handle sending an email
 app.post('/api/send-email', async (req, res) => {
   try {
-    const { modalId, status } = req.body;
+    //const { modalId, status } = req.body;
+    const { modalId, status } = req.query;
+
 
     console.log(req.body)
+    console.log(req.query)
 
     // Fetch the email address associated with the modalId from your database
     const email = await getEmailFromDatabase(modalId);

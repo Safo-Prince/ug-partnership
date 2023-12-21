@@ -59,25 +59,23 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
     try {
       // Make a request to your server to send the email
       const response = await fetch(
-        "http://197.255.126.63:3001/api/send-email",
+        `http://197.255.126.63:3001/api/send-email?modalId=${rowData.modalData?.id}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-
           body: JSON.stringify({
-            modalId: rowData.modalData?.id,
             status: status,
           }),
         }
       );
-
+  
       // Check if the request was successful
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-
+  
       // Log a success message or handle as needed
       console.log("Email sent successfully");
       setOpen(false);
@@ -85,6 +83,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
       console.error("Error sending email:", error);
     }
   };
+  
 
   return (
     <Transition.Root static show={open} as={Fragment}>
