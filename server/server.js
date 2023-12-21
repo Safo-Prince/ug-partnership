@@ -353,92 +353,7 @@ app.get('/api/download-pdf/:id', async (req, res) => {
 
 
 
-// New endpoint for generating and downloading PDF for all partnerships
-app.get('/api/download-all-pdf', async (req, res) => {
-  try {
-    // Fetch all partnerships from the database using promises
-    const sql = 'SELECT * FROM partnership_details';
-    const partnerships = await db.promise().query(sql);
 
-    // Create a PDF using pdfkit
-    const doc = new pdf();
-    partnerships.forEach((partnership) => {
-      // Customize the PDF content based on your data structure
-      // Set font and font size
-    doc.font('Helvetica').fontSize(18);
-
-    // Center-align text
-    const textOptions = { align: 'center' };
-
-    // Customize the PDF content based on your data structure
-    doc.text(partnership.partnership_name, { underline: true, bold: true, ...textOptions });
-    doc.moveDown(); // Add some space between lines
-    doc.fontSize(12); // Set font size for the rest of the content
-
-    doc.text(`Description: ${partnership.comment}`);
-    doc.moveDown();
-    doc.text(`College: ${partnership.location}`);
-    doc.moveDown();
-    doc.text(`Category: ${partnership.category}`);
-    doc.moveDown();
-    doc.text(`Partner Type: ${partnership.partner_type}`);
-    doc.moveDown();
-    doc.text(`Industry: ${partnership.industry}`);
-    doc.moveDown();
-    doc.text(`Secondary Partner: ${partnership.secondary_partners}`);
-    doc.moveDown();
-    doc.text(`Duration: ${partnership.duration}`);
-
-    // Format start and end dates
-    const startDate = new Date(partnership.start_date);
-    const endDate = new Date(partnership.end_date);
-
-    const startDateString = startDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-
-    const endDateString = endDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-
-    doc.moveDown();
-    doc.text(`Start Date: ${startDateString}`);
-    doc.moveDown();
-    doc.text(`End Date: ${endDateString}`);
-    doc.moveDown();
-
-    doc.text(`Keywords: ${partnership.keywords}`);
-      // Add other fields as needed
-      doc.moveDown(); // Add space between partnerships
-      doc.moveDown(); // Add space between partnerships
-      doc.moveDown(); // Add space between partnerships
-    });
-
-    // Save the PDF to a file (or stream it directly to the response)
-    const filePath = path.join(__dirname, 'pdfs', 'all_partnerships.pdf');
-    doc.pipe(fs.createWriteStream(filePath));
-    doc.end();
-
-    // Send the file
-    res.sendFile(filePath, (err) => {
-      if (err) {
-        console.error('Error sending file:', err);
-        res.status(500).send('Internal Server Error');
-      } else {
-        console.log('File sent successfully');
-      }
-    });
-  } catch (error) {
-    console.error('Error generating all PDFs:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
 
 
 
@@ -529,6 +444,7 @@ const getEmailFromDatabase = async (modalId) => {
 
   try {
     const results = await db.promise().query(query, [modalId]);
+    db.end()
 
     // Assuming the 'email' column contains the email address
     const email = results[0][0] ? results[0][0].email : null;
