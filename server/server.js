@@ -532,7 +532,8 @@ const generateAndSendAllPdf = async (res) => {
     });
 
     // Save the PDF to a file (or stream it directly to the response)
-    const filePath = path.join(__dirname, 'pdfs', 'all_rows.pdf');
+    const filePath = path.join(__dirname, 'pdfs', 'all_partnerships.pdf');
+
     doc.pipe(fs.createWriteStream(filePath));
 
     // Ensure the file is closed before continuing
