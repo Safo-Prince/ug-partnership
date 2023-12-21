@@ -85,7 +85,7 @@ app.get('/api/data/:id', async (req, res) => {
     console.error('Error fetching data from MySQL:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   } finally {
-    
+    db.end();
   }
 });
 
