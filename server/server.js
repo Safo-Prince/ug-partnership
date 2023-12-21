@@ -458,6 +458,7 @@ const getEmailFromDatabase = async (modalId) => {
 
 const generateAndSendAllPdf = async (res) => {
   try {
+    console.log("generating")
     const sql = 'SELECT * FROM partnership_details';
     const [results] = await db.promise().query(sql);
 
