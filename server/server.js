@@ -373,11 +373,10 @@ app.get('/api/download-pdf/:id', async (req, res) => {
 app.post('/api/send-email', async (req, res) => {
   try {
     //const { modalId, status } = req.body;
-    const { modalId, status } = req.query;
+    const { modalId, status } = req.body;
 
 
     console.log(req.body)
-    console.log(req.query)
 
     // Fetch the email address associated with the modalId from your database
     const email = await getEmailFromDatabase(modalId);
@@ -450,7 +449,6 @@ const getEmailFromDatabase = async (modalId) => {
 
   try {
     const results = await db.promise().query(query, [modalId]);
-    console.log(results)
     console.log(modalId)
 
     // Assuming the 'email' column contains the email address
