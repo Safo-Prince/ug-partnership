@@ -369,6 +369,7 @@ app.get('/api/download-pdf/:id', async (req, res) => {
 
 
 // Endpoint to handle sending an email
+// Endpoint to handle sending an email
 app.post('/api/send-email', async (req, res) => {
   try {
     const { modalId, status } = req.body;
@@ -444,7 +445,6 @@ const getEmailFromDatabase = async (modalId) => {
 
   try {
     const results = await db.promise().query(query, [modalId]);
-    //db.end()
 
     // Assuming the 'email' column contains the email address
     const email = results[0][0] ? results[0][0].email : null;
@@ -455,6 +455,7 @@ const getEmailFromDatabase = async (modalId) => {
     throw err;
   }
 };
+
 
 
 
