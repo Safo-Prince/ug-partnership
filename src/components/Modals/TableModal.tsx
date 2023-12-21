@@ -58,6 +58,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   const handleSendEmail = async (status: string) => {
     try {
       console.log(rowData)
+      console.log("ddddddd")
       console.log(rowData.modalData?.id)
       // Make a request to your server to send the email
       const response = await fetch(
