@@ -456,17 +456,10 @@ const getEmailFromDatabase = async (modalId) => {
 
 
 
-const generateAndSendAllPdf = async (res) => {
+// New endpoint for generating and downloading PDF for all rows
+app.get('/api/download-all-pdf', async (req, res) => {
   try {
-    console.log("generating")
-    const sql = 'SELECT * FROM partnership_details';
-    const [results] = await db.promise().query(sql);
-    //console.log(results)
-
-    if (results.length === 0) {
-      res.status(404).send('No data found');
-      return;
-    }
+    console.log("generating all");
 
     // Create a PDF using pdfkit
     const doc = new pdf();
@@ -476,6 +469,16 @@ const generateAndSendAllPdf = async (res) => {
 
     // Center-align text
     const textOptions = { align: 'center' };
+
+    // Fetch all partnership details
+    const sql = 'SELECT * FROM partnership_details';
+    const [results] = await db.promise().query(sql);
+
+    if (results.length === 0) {
+      // No data found, send a response with a 404 status
+      res.status(404).send('No data found');
+      return;
+    }
 
     // Loop through each row and add content to the PDF
     results.forEach((rowData, index) => {
@@ -543,24 +546,30 @@ const generateAndSendAllPdf = async (res) => {
     console.log('Generated PDF path (Server):', filePath);
 
     // Send the file
-    res.sendFile(filePath, (err) => {
+    res.sendFile(filePath, async (err) => {
       if (err) {
         console.error('Error sending file:', err);
         res.status(500).send('Internal Server Error');
       } else {
         console.log('File sent successfully');
+
+        // Schedule file deletion after a minute
+        setTimeout(async () => {
+          try {
+            await fs.promises.unlink(filePath);
+            console.log('File deleted successfully');
+          } catch (unlinkErr) {
+            console.error('Error deleting file:', unlinkErr);
+          }
+        }, 60000); // 60000 milliseconds = 60 seconds
       }
     });
   } catch (error) {
     console.error('Error generating PDF:', error);
     res.status(500).send('Internal Server Error');
   }
-};
-
-// New endpoint for generating and downloading PDF for all rows
-app.get('/api/download-all-pdf', async (req, res) => {
-  await generateAndSendAllPdf(res);
 });
+
 
 
 
