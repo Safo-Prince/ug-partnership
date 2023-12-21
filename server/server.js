@@ -374,6 +374,8 @@ app.post('/api/send-email', async (req, res) => {
   try {
     const { modalId, status } = req.body;
 
+    console.log(req.body)
+
     // Fetch the email address associated with the modalId from your database
     const email = await getEmailFromDatabase(modalId);
 
