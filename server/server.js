@@ -146,16 +146,18 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
 
         // Create a nodemailer transporter
         const transporter = nodemailer.createTransport({
-          service: 'gmail',
+          host: 'smtp.office365.com',
+          port: 587,  // You can also use port 25 if needed
+          secure: false,  // For port 587, set to false
           auth: {
-            user: 'irondicjonathan@gmail.com',
-            pass: 'zsfi avjq dagk joyf',
+            user: 'sipp@ug.edu.gh',  // Use the Microsoft 365 email address
+            pass: 'Saq85511',
           },
         });
 
         // Send email to the email address in the form data
         const userMailOptions = {
-          from: 'irondicjonathan@gmail.com',
+          from: 'sipp@ug.edu.gh',
           to: formData.email,
           subject: 'Partnership Received',
           text: `Dear Sir/Madam,
@@ -177,7 +179,7 @@ app.post("/submit-form", upload.array("files", 2), async (req, res) => {
 
           // Send email to the statically provided email
           const adminMailOptions = {
-            from: 'irondicjonathan@gmail',
+            from: 'sipp@ug.edu.gh',
             to: 'mikesaxxmusic@gmail.com',
             subject: 'Subject for admin',
             text: 'A new Partnership has been uploaded',
@@ -409,16 +411,18 @@ Thank you.
 
     // Use nodemailer's createTransport to create a transporter
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.office365.com',
+      port: 587,  // You can also use port 25 if needed
+      secure: false,  // For port 587, set to false
       auth: {
-        user: 'irondicjonathan@gmail.com', // Replace with your Gmail address
-        pass: 'zsfi avjq dagk joyf', // Replace with your Gmail password
+        user: 'sipp@ug.edu.gh',  // Use the Microsoft 365 email address
+        pass: 'Saq85511',
       },
     });
 
     // Create mail options
     const mailOptions = {
-      from: 'irondicjonathan@gmail.com',
+      from: 'sipp@ug.edu.gh',
       to: email, // Use the retrieved email address
       subject: subject,
       text: body,
