@@ -17,7 +17,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+const corsOptions = {
+  origin: 'https://partnerships.ug.edu.gh',
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
 
 const db = mysql.createConnection({
   host: 'localhost',
