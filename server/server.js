@@ -9,6 +9,7 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const format = require('date-fns/format');
+require('dotenv').config(); // Load environment variables from .env file
 
 
 
@@ -26,10 +27,10 @@ app.use(cors(corsOptions));
 
 
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Blue12:34',
-  database: 'sipp_project',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 });
 
 // Event listener for when a connection is established
