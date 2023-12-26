@@ -1,10 +1,21 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const router = express.Router();
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var isLoggedIn = false
+
+
+// Use CORS middleware
+const corsOptions = {
+  origin: 'https://partnerships.ug.edu.gh',
+  optionsSuccessStatus: 200,
+};
+router.use(cors(corsOptions));
+
+
 // Use session middleware
 router.use(
   session({

@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  // ... (imports)
+
 
   return (
     <div className="w-full flex justify-center items-center flex-grow background-image min-h-screen">
