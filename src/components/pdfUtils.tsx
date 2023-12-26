@@ -3,7 +3,7 @@
 {/* @ts-ignore */}
 export const downloadPdf = async (rowData) => {
     try {
-      const response = await fetch(`http://197.255.126.63:3001/api/download-pdf/${rowData.id}`);
+      const response = await fetch(`https://partnerships.ug.edu.gh/api/download-pdf/${rowData.id}`);
       
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
@@ -33,7 +33,7 @@ export const downloadPdf = async (rowData) => {
   export const handleDownloadAllPdf = async () => {
     try {
       // Make a request to your server to generate and download the PDF for all partnerships
-      const response = await fetch('http://197.255.126.63:3001/api/download-all-pdf');
+      const response = await fetch('https://partnerships.ug.edu.gh/api/download-all-pdf');
   
       // Check if the request was successful
       if (!response.ok) {
