@@ -32,7 +32,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
           /* @ts-ignore */
         }
         /* @ts-ignore */
-        const response = await fetch(`http://197.255.126.63:3001/api/data/${rowData.id}`);
+        const response = await fetch(`https://partnerships.ug.edu.gh/api/data/${rowData.id}`);
         const data = await response.json();
         console.log(data);
         setModalData(data);

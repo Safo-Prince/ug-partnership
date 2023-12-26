@@ -26,7 +26,7 @@ const TableBody: React.FC<Props> = ({ selectedFilter }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://197.255.126.63:3001/api/data?filter=${selectedFilter}`
+          `https://partnerships.ug.edu.gh/api/data?filter=${selectedFilter}`
         );
         const data = await response.json();
   
