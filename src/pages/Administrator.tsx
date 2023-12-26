@@ -5,7 +5,7 @@ import axios from "axios";
 import * as React from "react";
 import Hero from "../components/Hero";
 
-const baseURL = "http://197.255.126.63:3001/loginstatus";
+const baseURL = "https://partnerships.ug.edu.gh/loginstatus";
 
 {
   /* @ts-ignore */
