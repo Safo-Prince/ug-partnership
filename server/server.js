@@ -26,20 +26,20 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+const db = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'Blue12:34',
+  //password:'Cj10856672',
+  database: 'sipp_project',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 // Event listener for when a connection is established
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-  } else {
-    console.log('Connected to MySQL');
-  }
+db.on('acquire', function (connection) {
+  console.log('Connection %d acquired', connection.threadId);
 });
 
 // Middleware to parse JSON data from the request body
@@ -58,17 +58,18 @@ app.get('/api/data', async (req, res) => {
     sql += ` WHERE status = '${filter}'`; // Adjust this based on your data structure
   }
 
-  try {
-    // Use the promise-based API to execute the query
-    const [result] = await db.promise().query(sql);
-    res.status(200).json(result);
-  } catch (err) {
-    console.error('Error fetching data from MySQL:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  } finally {
-    // Close the connection after executing the query
-    //db.end();
-  }
+  db.query(sql, async (err, results) => {
+    if (err) {
+      console.error('Error fetching projects:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      
+
+      console.log('Backend projects with images:', projectsWithImages);
+
+      res.json(results);
+    }
+  });
 });
 
 
