@@ -42,6 +42,11 @@ db.on('acquire', function (connection) {
   console.log('Connection %d acquired', connection.threadId);
 });
 
+// Event listener for when a connection is released back to the pool
+db.on('release', function (connection) {
+  console.log('Connection %d released', connection.threadId);
+});
+
 // Middleware to parse JSON data from the request body
 app.use(bodyParser.json());
 
@@ -58,17 +63,26 @@ app.get('/api/data', async (req, res) => {
     sql += ` WHERE status = '${filter}'`; // Adjust this based on your data structure
   }
 
-  db.query(sql, async (err, results) => {
+  // Use getConnection to obtain a connection from the pool
+  db.getConnection((err, connection) => {
     if (err) {
-      console.error('Error fetching projects:', err);
+      console.error('Error getting connection from pool:', err);
       res.status(500).json({ error: 'Internal Server Error' });
-    } else {
-      
-
-      console.log('Backend projects with images:', projectsWithImages);
-
-      res.json(results);
+      return;
     }
+
+    // Execute the query on the obtained connection
+    connection.query(sql, (queryErr, results) => {
+      // Release the connection back to the pool
+      connection.release();
+
+      if (queryErr) {
+        console.error('Error fetching projects:', queryErr);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        res.status(200).json(results);
+      }
+    });
   });
 });
 
