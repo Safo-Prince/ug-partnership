@@ -457,9 +457,19 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
           // Send email to the statically provided email
           const adminMailOptions = {
             from: 'sipp@ug.edu.gh',
-            to: 'mikesaxxmusic@gmail.com',
-            subject: 'Subject for admin',
-            text: 'A new Partnership has been uploaded',
+            to: 'mikesaxxmusic@gmail.com',//email of orid admin
+            subject: 'New Partnership Submission  Received - Action Required',
+            text: `
+            Dear Administrator
+
+You are receiving this automated notification to inform you that a new partnership has been submitted and is awaiting your review.
+
+To access the Partnership Submission for evaluation, please click on this link to visit the Partnership Dashboard: [Insert Link]
+
+Your prompt attention to this matter is appreciated to ensure timely assessment of the submitted partnership.
+
+Thank you.`
+            ,
           };
 
           try {
