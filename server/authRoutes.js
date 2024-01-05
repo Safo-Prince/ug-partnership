@@ -26,23 +26,27 @@ router.use(
 
 router.use(bodyParser.json());
 
+
 // Simulate a user for testing
 const validUser = {
-  email: 'josephkafui27@gmail.com',
+  emails: ['mnhutchful@ug.edu.gh', 'DAdobeaAntwiOwusu@ug.edu.gh'],
   password: '1234567891',
 };
 
-router.post('/login',urlencodedParser, (req, res) => {
+router.post('/login', urlencodedParser, (req, res) => {
   const { email, password } = req.body;
 
-  if (email === validUser.email && password === validUser.password) {
+  // Check if the entered email matches any of the valid emails
+  if (validUser.emails.includes(email) && password === validUser.password) {
     req.session.user = validUser; // Store user information in the session
-    isLoggedIn=true
+    isLoggedIn = true;
+
     res.status(200).send({ message: 'Login successful' });
   } else {
-    res.status(401).send({ message: 'Invalid credentials ' + req.body.email + ' try again' });
+    res.status(401).send({ message: 'Invalid credentials, try again' });
   }
 });
+
 
 // Add this middleware to check authentication only for /admin route
 router.use('/admin', (req, res, next) => {
