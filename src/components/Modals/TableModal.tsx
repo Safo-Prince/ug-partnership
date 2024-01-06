@@ -63,7 +63,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
 
       // Make a request to your server to send the email
       const response = await fetch(
-        "http://197.255.126.63:3001/api/send-email",
+        "https://partnerships.ug.edu.gh/api/send-email",
         {
           method: "POST",
           headers: {
@@ -207,7 +207,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
                                 className="text-[#007BFF] text-left text-xs sm:text-base"
                               >
                                 <a
-                                  href={`http://197.255.126.63:3001/api/download/${getFileNameFromPath(
+                                  href={`https://partnerships.ug.edu.gh/api/download/${getFileNameFromPath(
                                     filePath
                                   )}`}
                                   download
