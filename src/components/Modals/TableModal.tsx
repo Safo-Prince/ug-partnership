@@ -21,6 +21,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   {
     /* @ts-ignore */
   }
+  /* @ts-ignore */
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,9 +31,8 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
         {
           /* @ts-ignore */
         }
-        const response = await fetch(
-          `http://197.255.126.63:3001/api/data/${rowData.id}`
-        );
+        /* @ts-ignore */
+        const response = await fetch(`https://partnerships.ug.edu.gh/api/data/${rowData.id}`);
         const data = await response.json();
         console.log(data);
         setModalData(data);
@@ -57,27 +57,31 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   // Function to handle sending the email
   const handleSendEmail = async (status: string) => {
     try {
+      /* @ts-ignore */
+      const modalId = (modalData as { id?: number })?.id;
+      console.log(modalId);
+
       // Make a request to your server to send the email
       const response = await fetch(
-        "http://197.255.126.63:3001/api/send-email",
+        "https://partnerships.ug.edu.gh/api/send-email",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-
           body: JSON.stringify({
-            modalId: rowData.modalData?.id,
+            modalId: modalId,
             status: status,
           }),
         }
       );
-
+      
+  
       // Check if the request was successful
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-
+  
       // Log a success message or handle as needed
       console.log("Email sent successfully");
       setOpen(false);
@@ -85,6 +89,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
       console.error("Error sending email:", error);
     }
   };
+  
 
   return (
     <Transition.Root static show={open} as={Fragment}>
@@ -196,17 +201,13 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
                           Relevant Files
                         </h1>
                         {/* @ts-ignore */}
-                        {modalData &&
-                          modalData.files &&
-                          modalData.files
-                            .split(",")
-                            .map((filePath: string, index: number) => (
+                        {modalData && modalData.files && modalData.files.split(",").map((filePath: string, index: number) => (
                               <p
                                 key={index}
                                 className="text-[#007BFF] text-left text-xs sm:text-base"
                               >
                                 <a
-                                  href={`http://197.255.126.63:3001/api/download/${getFileNameFromPath(
+                                  href={`https://partnerships.ug.edu.gh/api/download/${getFileNameFromPath(
                                     filePath
                                   )}`}
                                   download

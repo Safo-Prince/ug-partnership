@@ -2,7 +2,9 @@ import * as React from "react";
 import { useState } from "react";
 import deloitte from "../assets/deloitte.png";
 import tullow from "../assets/tullow-oil.png";
+/* @ts-ignore */
 import german from "../assets/german.png";
+/* @ts-ignore */
 import masterCard from "../assets/mastercard.png";
 import africanPrint from "../assets/african-print.png";
 import GNPC from "../assets/gnpc.png";

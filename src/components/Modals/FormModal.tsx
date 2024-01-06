@@ -2,7 +2,8 @@ import * as React from "react";
 {
   /* @ts-ignore */
 }
-import { FormEvent, Fragment, useState } from "react";
+/* @ts-ignore */
+import { Children, FormEvent, Fragment, useState, ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Plus, X } from "@phosphor-icons/react";
@@ -131,7 +132,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setButtonText("submitting...");
-
+  
     try {
       const formDataToSend: any = new FormData();
       // Append files to FormData
@@ -140,24 +141,23 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
           formDataToSend.append("files", formData.files[i]);
         }
       }
-
+  
       // Append other form data properties
       Object.keys(formData).forEach((key) => {
         if (key !== "files") {
-          {
-            /* @ts-ignore */
-          }
+           /* @ts-ignore */
           formDataToSend.append(key, formData[key]);
         }
       });
-
-      const response = await fetch("http://197.255.126.63:3001/submit-form", {
+  
+      const response = await fetch("https://partnerships.ug.edu.gh/submit-form", {
         method: "POST",
         body: formDataToSend,
       });
-
+  
       if (response.ok) {
-        console.log("Form submitted successfully");
+        const responseData = await response.json(); // Parse JSON response
+        console.log("Form submitted successfully:", responseData.message);
         setOpen(false);
         setButtonText("submit");
         // Refresh the page to clear input fields
@@ -169,6 +169,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
       console.error("Error:", error);
     }
   };
+  
 
   return (
     <Transition.Root static show={open} as={Fragment}>
@@ -405,8 +406,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
 
                       <button
                         type="submit"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 bg-[#153D6D]"
-                      >
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 bg-[#153D6D]">
                         {buttonText}
                       </button>
                     </form>

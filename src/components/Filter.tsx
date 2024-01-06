@@ -14,7 +14,7 @@ const Filter: React.FC<FilterProps> = ({ onSelectFilter }) => {
     try {
       // Make a request to your server to generate and download the PDF for all partnerships
       const response = await fetch(
-        "http://197.255.126.63:3001/api/download-all-pdf"
+        "https://partnerships.ug.edu.gh/api/download-all-pdf"
       );
 
       // Check if the request was successful

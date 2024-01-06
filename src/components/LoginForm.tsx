@@ -9,6 +9,7 @@ const LoginForm: React.FC = () => {
   {
     /* @ts-ignore */
   }
+  /* @ts-ignore */
   const [loginError, setLoginError] = useState(false);
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const LoginForm: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://197.255.126.63:3001/login", {
+      const response = await fetch("https://partnerships.ug.edu.gh/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +40,7 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  // ... (imports)
+
 
   return (
     <div className="w-full flex justify-center items-center flex-grow background-image min-h-screen">
