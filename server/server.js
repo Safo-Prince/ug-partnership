@@ -464,7 +464,7 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
 
 You are receiving this automated notification to inform you that a new partnership has been submitted and is awaiting your review.
 
-To access the Partnership Submission for evaluation, please click on this link to visit the Partnership Dashboard: [Insert Link]
+To access the Partnership Submission for evaluation, please click on this link to visit the Partnership Portal https://partnerships.ug.edu.gh
 
 Your prompt attention to this matter is appreciated to ensure timely assessment of the submitted partnership.
 
@@ -673,25 +673,36 @@ app.post('/api/send-email', async (req, res) => {
       subject = 'Partnership Approved';
       body = `Congratulations,
 
-Your partnership application has been reviewed and we are pleased to let you know that it meets our criteria. Your application will be added to the list partnerships we have.
+Your partnership application has been reviewed and we are pleased to let you know that it meets our criteria. 
 
-Thank you.
+Your application will be added to the list partnerships we have.
 
-+233-(0)303-930436                                     orid@ug.edu.gh
-+233-(0)302-213850
-                                    P.O. Box LG 1142
-                                    Legon, Accra`;
+Best regards,
+
+UG Partnership Assessment Team.
+
+`;
     } else if (status === 'pending') {
       subject = 'Partnership Pending';
-      body = `Dear sir/madam,,
+      body = `Dear sir/madam,
+      
+Your submission to UG Partnerships portal is currently pending. Our Assessment Team has reviewed your submission and identified that further information is required to proceed with the assessment.
 
-Your partnership application has been reviewed.
-Thank you.
+Below, you'll find comments from our Assessment Team regarding the additional information needed for your application. We kindly ask you to review these comments and provide the requested details at your earliest convenience.
+      
+[Insert Comments ]
+      
+Your prompt attention to this matter will enable us to move forward with the assessment of your submission 
+      
+Should you have any questions or need clarification on the required information, please don't hesitate to reach out to us. 
+      
+Thank you for your cooperation.
+      
+Best regards,
+      
+UG Partnerships Assessment Team
 
-+233-(0)303-930436                                     orid@ug.edu.gh
-+233-(0)302-213850
-                                    P.O. Box LG 1142
-                                    Legon, Accra`;
+`;
     } else {
       return res.status(400).json({ error: 'Invalid status provided' });
     }
