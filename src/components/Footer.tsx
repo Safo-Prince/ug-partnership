@@ -1,4 +1,4 @@
-import * as  React from "react";
+import * as React from "react";
 import { Facebook, Instagram } from "iconsax-react";
 import { TwitterLogo, SnapchatLogo } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
@@ -26,6 +26,7 @@ const Footer: React.FC = () => {
               <li key={item.name}>
                 <a
                   href={item.href}
+                  target="_blank"
                   className="text-base leading-6 text-gray-300 hover:text-white font-lato "
                 >
                   {item.name}
@@ -51,6 +52,7 @@ const Footer: React.FC = () => {
               <li key={item.name}>
                 <a
                   href={item.href}
+                  target="_blank"
                   className="text-base leading-6 text-gray-300 hover:text-white font-lato "
                 >
                   {item.name}
@@ -76,6 +78,7 @@ const Footer: React.FC = () => {
               <li key={item.name}>
                 <a
                   href={item.href}
+                  target="_blank"
                   className="text-sm leading-6 text-gray-300 hover:text-white font-lato"
                 >
                   {item.name}

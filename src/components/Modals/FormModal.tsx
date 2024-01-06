@@ -2,7 +2,7 @@ import * as React from "react";
 {
   /* @ts-ignore */
 }
-import { Children, FormEvent, Fragment, useState, ReactNode } from "react";
+import { FormEvent, Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Plus, X } from "@phosphor-icons/react";
@@ -256,10 +256,13 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         <option value="College Of Education">
                           College Of Education
                         </option>
+                        <option value="College Of Education">
+                          Central Administration
+                        </option>
                       </select>
 
                       <textarea
-                        rows={4}
+                        rows={2}
                         id="comment"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         name="comment"
@@ -314,45 +317,6 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.industry}
                         onChange={handleInputChange}
                       />
-
-                      <div className="flex  flex-col space-y-3 items-center space-x-2">
-                        <div className="flex w-full  rounded-md border">
-                          <input
-                            value={formData.newKeyword}
-                            onChange={handleInputChange}
-                            placeholder="Add Keyword"
-                            name="newKeyword"
-                            className="block rounded-md w-full  border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-inset placeholder:text-gray-400 focus:ring-0 ring-0 sm:text-sm sm:leading-6"
-                          />
-                          <button
-                            type="button"
-                            onClick={handleAddKeyword}
-                            className="border-2 border-dotted border-stone-200 py-1 px-3 rounded-md"
-                          >
-                            <Plus size={20} color="#d6cdcd" />
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-3 sm:grid-cols-4 grid-rows-3 w-full gap-1">
-                          {formData.keywords.map((item, index) => (
-                            <span
-                              key={index}
-                              className="py-1.5 px-2 bg-[#E6F1F4] text-[#1391B3] sm:text-sm text-xs rounded-md flex space-x-1 items-center justify-between " // Changed to cursor-pointer
-                            >
-                              <span>
-                                {item.length > 5
-                                  ? `${item.slice(0, 7)}...`
-                                  : item}
-                              </span>
-                              <X
-                                size={15}
-                                className="cursor-pointer"
-                                onClick={() => handleRemoveKeyword(index)}
-                              />
-                            </span>
-                          ))}
-                        </div>
-                      </div>
 
                       <input
                         placeholder="Secondary partners"
