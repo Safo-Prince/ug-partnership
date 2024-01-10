@@ -11,14 +11,16 @@ import GNPC from "../assets/gnpc.png";
 import FormModal from "./Modals/FormModal";
 import "../styles/main.css";
 
+import logo from "../assets/logo.png";
+
 const Main: React.FC = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className="background-image  pt-0    border">
       <div className="mx-auto max-w-7xl px-6  py-11 lg:py-20 ">
-        <p className="font-bold text-xl  sm:text-3xl lg:text-5xl xl:text-7xl text-[#3D3D3D] font-poppins text-center sm:text-left ">
-          <h1>Industry-Academia Synergy:</h1>
-          <h1 className="mt-2">Driving The University’s Progress</h1>
+        <p className="font-bold text-xl  sm:text-3xl lg:text-4xl xl:text-6xl text-[#3D3D3D] font-poppins text-center sm:text-left ">
+          <h1>Academia Synergy:</h1>
+          <h1 className="mt-2">Driving the Nation’s Progress</h1>
         </p>
 
         <div className="flex justify-between mt-7 lg:mt-14">
@@ -32,7 +34,7 @@ const Main: React.FC = () => {
             <div className="flex justify-center mt-4 sm:block sm:mt-0">
               <button
                 onClick={() => setOpen(true)}
-                className="sm:px-5 sm:py-3 px-1 py-2 rounded-sm bg-[#153D6D] text-white sm:text-sm sm:w-52 w-44 text-xs"
+                className="sm:px-3 sm:py-3 px-1 py-2 rounded-sm bg-[#153D6D] text-white sm:w-52 w-44 sm:!text-lg"
               >
                 List Your Partnerships
               </button>
@@ -47,13 +49,13 @@ const Main: React.FC = () => {
 
         <div className="mt-24">
           <h1 className="font-extrabold font-poppins text-2xl sm:text-3xl lg:text-5xl text-center text-[#56585B]">
-            Top Partners
+            Partners
           </h1>
-          <div className="max-w-[1300px] flex justify-around sm:mt-10 mt-5 ">
-            <img src={deloitte} alt="deloitte" className="sm:w-32 w-14" />
-            <img src={GNPC} alt="dgnpc" className="sm:w-32 w-16" />
+          <div className="max-w-[1300px] flex justify-around flex-col sm:flex-row sm:mt-10 mt-5  items-center">
+            <img src={logo} alt="logo" className=" w-60" />
+            <img src={logo} alt="logo" className="w-60" />
 
-            <img src={tullow} alt="tullow" className="sm:w-32 w-20 " />
+            <img src={logo} alt="logo" className=" w-60" />
 
             <FormModal open={open} setOpen={setOpen} />
           </div>

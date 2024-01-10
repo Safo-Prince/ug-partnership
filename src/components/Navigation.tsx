@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowRight2, LogoutCurve } from "iconsax-react";
 import { headerNavigation } from "../constants/constants";
@@ -15,6 +15,7 @@ const Navigation: React.FC = () => {
             <li key={index}>
               <a
                 href={item.href}
+                target="_blank"
                 className="text-gray-600 hover:text-gray-400 cursor-pointer "
               >
                 {item.name}

@@ -132,7 +132,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setButtonText("submitting...");
-  
+
     try {
       const formDataToSend: any = new FormData();
       // Append files to FormData
@@ -141,20 +141,23 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
           formDataToSend.append("files", formData.files[i]);
         }
       }
-  
+
       // Append other form data properties
       Object.keys(formData).forEach((key) => {
         if (key !== "files") {
-           /* @ts-ignore */
+          /* @ts-ignore */
           formDataToSend.append(key, formData[key]);
         }
       });
-  
-      const response = await fetch("https://partnerships.ug.edu.gh/submit-form", {
-        method: "POST",
-        body: formDataToSend,
-      });
-  
+
+      const response = await fetch(
+        "https://partnerships.ug.edu.gh/submit-form",
+        {
+          method: "POST",
+          body: formDataToSend,
+        }
+      );
+
       if (response.ok) {
         const responseData = await response.json(); // Parse JSON response
         console.log("Form submitted successfully:", responseData.message);
@@ -169,7 +172,6 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
       console.error("Error:", error);
     }
   };
-  
 
   return (
     <Transition.Root static show={open} as={Fragment}>
@@ -236,31 +238,34 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                       />
 
                       <select
-                        id="location"
+                        id="college"
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         name="location"
                         value={formData.location}
                         onChange={handleInputChange}
                       >
-                        <option value="--select college--">
-                          --select college---
+                        <option disabled value="-- select college --">
+                          -- select college --
                         </option>
                         <option value="College Of Health Sciences">
-                          College Of Health Sciences
+                          College of Health Sciences
                         </option>
                         <option value="College Of Basic and Applied Science">
-                          College Of Basic And Applied Sciences
+                          College of Basic And Applied Sciences
                         </option>
                         <option value="College Of Humanity">
-                          College Of Humanities
+                          College of Humanities
                         </option>
                         <option value="College Of Education">
-                          College Of Education
+                          College of Education
+                        </option>
+                        <option value="College Of Education">
+                          Central Administration
                         </option>
                       </select>
 
                       <textarea
-                        rows={4}
+                        rows={2}
                         id="comment"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         name="comment"
@@ -270,13 +275,15 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                       />
 
                       <select
-                        id="location"
+                        id="category"
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         name="category"
                         value={formData.category}
                         onChange={handleInputChange}
                       >
-                        <option>--select category---</option>
+                        <option disabled value="--select category--">
+                          --select category--
+                        </option>
                         <option value="Research">Research</option>
                         <option value="Development">Development</option>
                         <option value="Internship">Internship</option>
@@ -296,7 +303,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.partner_type}
                         onChange={handleInputChange}
                       >
-                        <option value="--select partner type---">
+                        <option disabled value="--select partner type---">
                           --select partner type---
                         </option>
                         <option value="Local Company">Local Company</option>
@@ -305,58 +312,78 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         <option value="Department or Agency of Government">
                           Department or Agency of Government
                         </option>
+                        <option value="Other">Other</option>
                       </select>
 
-                      <input
-                        placeholder="Industry"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
-                        type="text"
+                      {formData.partner_type === "Other" && (
+                        <input
+                          placeholder="If 'Other,' please specify the partner "
+                          className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                          type="text"
+                          name="other_partner_type"
+                          // value={formData.secondary_partners}
+                          // onChange={handleInputChange}
+                        />
+                      )}
+
+                      <select
+                        id="industry"
                         name="industry"
                         value={formData.industry}
                         onChange={handleInputChange}
-                      />
-
-                      <div className="flex  flex-col space-y-3 items-center space-x-2">
-                        <div className="flex w-full  rounded-md border">
-                          <input
-                            value={formData.newKeyword}
-                            onChange={handleInputChange}
-                            placeholder="Add Keyword"
-                            name="newKeyword"
-                            className="block rounded-md w-full  border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-inset placeholder:text-gray-400 focus:ring-0 ring-0 sm:text-sm sm:leading-6"
-                          />
-                          <button
-                            type="button"
-                            onClick={handleAddKeyword}
-                            className="border-2 border-dotted border-stone-200 py-1 px-3 rounded-md"
-                          >
-                            <Plus size={20} color="#d6cdcd" />
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-3 sm:grid-cols-4 grid-rows-3 w-full gap-1">
-                          {formData.keywords.map((item, index) => (
-                            <span
-                              key={index}
-                              className="py-1.5 px-2 bg-[#E6F1F4] text-[#1391B3] sm:text-sm text-xs rounded-md flex space-x-1 items-center justify-between " // Changed to cursor-pointer
-                            >
-                              <span>
-                                {item.length > 5
-                                  ? `${item.slice(0, 7)}...`
-                                  : item}
-                              </span>
-                              <X
-                                size={15}
-                                className="cursor-pointer"
-                                onClick={() => handleRemoveKeyword(index)}
-                              />
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                      >
+                        <option disabled value="">
+                          --select industry--
+                        </option>
+                        <option value="Agri-Business">Agri-Business</option>
+                        <option value="Arts and Crafts">Arts and Crafts</option>
+                        <option value="Foods and Beverages">
+                          Foods and Beverages
+                        </option>
+                        <option value="Banking,Financial Services including insurances">
+                          Banking,Financial Services including insurances
+                        </option>
+                        <option value="Environment and Sanitation">
+                          Environment and Sanitation
+                        </option>
+                        <option value="Energy & Climate Change">
+                          Energy and Climate Change
+                        </option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Hospitalities and Tourism">
+                          Hospitalities and Tourism
+                        </option>
+                        <option value="Information and Communication Technology including Software">
+                          Information and Communication Technology including
+                          Software
+                        </option>
+                        <option value="Health and Biotechnology">
+                          Health and Biotechnology
+                        </option>
+                        <option value="Other">Other</option>
+                      </select>
+                      {formData.industry === "Other" && (
+                        <input
+                          placeholder="If 'Other,' please specify the industry "
+                          className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                          type="text"
+                          name="other_industry_type"
+                          // value={formData.secondary_partners}
+                          // onChange={handleInputChange}
+                        />
+                      )}
 
                       <input
-                        placeholder="Secondary partners"
+                        placeholder="Key partner"
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                        type="text"
+                        name="secondary_partners"
+                        value={formData.secondary_partners}
+                        onChange={handleInputChange}
+                      />
+                      <input
+                        placeholder="Secondary partner"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         type="text"
                         name="secondary_partners"
@@ -380,8 +407,8 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.status}
                         onChange={handleInputChange}
                       >
-                        <option value="">
-                          -- Select Status Of Partnership---
+                        <option disabled value="">
+                          -- select status of partnership --
                         </option>
                         <option value="Active">Active</option>
                         <option value="Terminated">Terminated</option>
@@ -421,7 +448,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                           </label>
                           <span>Add relevant files</span>
                         </div>
-                        <div className="grid grid-cols-3 grid-rows-3 gap-1">
+                        <div className="grid grid-cols-1 grid-rows-1 gap-1">
                           {formData.files &&
                             formData.files.map((file, index) => (
                               <div
@@ -442,7 +469,8 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
 
                       <button
                         type="submit"
-                        className="block w-full rounded-md border-0 py-1.5 px-3 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 bg-[#153D6D]">
+                        className="block w-full rounded-md border-0 py-1.5 px-3 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 bg-[#153D6D]"
+                      >
                         {buttonText}
                       </button>
                     </form>
