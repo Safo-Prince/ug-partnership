@@ -63,7 +63,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
       [name]: value,
     }));
   };
-
+/* @ts-ignore */
   const handleAddKeyword = () => {
     const newKeyword = formData.newKeyword.trim();
 
@@ -82,6 +82,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
   {
     /* @ts-ignore */
   }
+  /* @ts-ignore */
   const handleRemoveKeyword = (index: any) => {
     setFormData((prevData) => {
       const newKeywords = [...prevData.keywords];

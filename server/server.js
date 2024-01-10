@@ -683,9 +683,9 @@ UG Partnership Assessment Team.
 
 `;
     } else if (status === 'pending') {
-      subject = 'Partnership Pending';
+      subject = 'Request for Additional Information - UG Partnerships';
       body = `Dear sir/madam,
-      
+
 Your submission to UG Partnerships portal is currently pending. Our Assessment Team has reviewed your submission and identified that further information is required to proceed with the assessment.
 
 Below, you'll find comments from our Assessment Team regarding the additional information needed for your application. We kindly ask you to review these comments and provide the requested details at your earliest convenience.
