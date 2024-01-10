@@ -317,7 +317,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
 
                       {formData.partner_type === "Other" && (
                         <input
-                          placeholder="Enter other partner type not listed "
+                          placeholder="If 'Other,' please specify the partner "
                           className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                           type="text"
                           name="other_partner_type"
@@ -330,7 +330,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         id="industry"
                         name="industry"
                         value={formData.industry}
-                        // onChange={handleInputChange}
+                        onChange={handleInputChange}
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                       >
                         <option disabled value="">
@@ -361,7 +361,18 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         <option value="Health and Biotechnology">
                           Health and Biotechnology
                         </option>
+                        <option value="Other">Other</option>
                       </select>
+                      {formData.industry === "Other" && (
+                        <input
+                          placeholder="If 'Other,' please specify the industry "
+                          className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                          type="text"
+                          name="other_industry_type"
+                          // value={formData.secondary_partners}
+                          // onChange={handleInputChange}
+                        />
+                      )}
 
                       <input
                         placeholder="Key partner"
