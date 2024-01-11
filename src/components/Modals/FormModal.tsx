@@ -63,7 +63,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
       [name]: value,
     }));
   };
-/* @ts-ignore */
+  /* @ts-ignore */
   const handleAddKeyword = () => {
     const newKeyword = formData.newKeyword.trim();
 
@@ -246,7 +246,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         onChange={handleInputChange}
                       >
                         <option disabled value="-- select college --">
-                          -- select college --
+                          -- Select college --
                         </option>
                         <option value="College Of Health Sciences">
                           College of Health Sciences
@@ -282,8 +282,8 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.category}
                         onChange={handleInputChange}
                       >
-                        <option disabled value="--select category--">
-                          --select category--
+                        <option disabled value="--Select category--">
+                          --Select category--
                         </option>
                         <option value="Research">Research</option>
                         <option value="Development">Development</option>
@@ -304,8 +304,8 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         value={formData.partner_type}
                         onChange={handleInputChange}
                       >
-                        <option disabled value="--select partner type---">
-                          --select partner type---
+                        <option disabled value="--Select partner type---">
+                          --Select partner type---
                         </option>
                         <option value="Local Company">Local Company</option>
                         <option value="Foreign Entity">Foreign Entity</option>
@@ -335,7 +335,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                       >
                         <option disabled value="">
-                          --select industry--
+                          --Select industry--
                         </option>
                         <option value="Agri-Business">Agri-Business</option>
                         <option value="Arts and Crafts">Arts and Crafts</option>
@@ -409,7 +409,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         onChange={handleInputChange}
                       >
                         <option disabled value="">
-                          -- select status of partnership --
+                          -- Select status of partnership --
                         </option>
                         <option value="Active">Active</option>
                         <option value="Terminated">Terminated</option>
