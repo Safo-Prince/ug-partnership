@@ -18,14 +18,14 @@ const Main: React.FC = () => {
   return (
     <div className="background-image  pt-0    border">
       <div className="mx-auto max-w-7xl px-6  py-11 lg:py-20 ">
-        <p className="font-bold text-xl  sm:text-3xl lg:text-4xl xl:text-6xl text-[#3D3D3D] font-poppins text-center sm:text-left ">
+        <p className="font-bold text-xl  sm:text-3xl lg:text-3xl xl:text-4xl text-[#3D3D3D] font-poppins text-center sm:text-left ">
           <h1>Academia Synergy:</h1>
           <h1 className="mt-2">Driving the Nation’s Progress</h1>
         </p>
 
-        <div className="flex justify-between mt-7 lg:mt-14">
+        <div className="flex justify-between mt-7 lg:mt-10">
           <div className="flex flex-col justify-between">
-            <p className="font-lato text-lg sm:text-3xl max-w-2xl text-[#56585B] leading-relaxed text-center sm:text-left">
+            <p className="font-lato text-lg sm:text-xl max-w-2xl text-[#56585B] leading-relaxed text-center sm:text-left">
               The University of Ghana is committed to working with industry to
               create a brighter future for Ghana. We believe that by working
               together, we can create a more prosperous and equitable society
