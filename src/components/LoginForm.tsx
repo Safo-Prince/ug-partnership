@@ -34,6 +34,7 @@ const LoginForm: React.FC = () => {
       } else {
         setLoginError(true);
         setIsLoading(false);
+        alert("Wrong Credentials")
       }
     } catch (error) {
       console.error("Error:", error);
