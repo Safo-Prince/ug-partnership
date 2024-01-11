@@ -303,7 +303,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         value={formData.partner_type}
                         onChange={handleInputChange}
-                      >
+                        >
                         <option disabled value="--Select partner type---">
                           --Select partner type---
                         </option>
