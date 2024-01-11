@@ -1,12 +1,15 @@
 import * as React from "react";
 import { useState } from "react";
+/* @ts-ignore */
 import deloitte from "../assets/deloitte.png";
+/* @ts-ignore */
 import tullow from "../assets/tullow-oil.png";
 /* @ts-ignore */
 import german from "../assets/german.png";
 /* @ts-ignore */
 import masterCard from "../assets/mastercard.png";
 import africanPrint from "../assets/african-print.png";
+/* @ts-ignore */
 import GNPC from "../assets/gnpc.png";
 import FormModal from "./Modals/FormModal";
 import "../styles/main.css";
