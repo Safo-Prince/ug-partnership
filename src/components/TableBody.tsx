@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Eye, Trash } from "iconsax-react";
+import { Eye } from "iconsax-react";
+//import { Trash } from "iconsax-react";
 import { FileMinus } from "@phosphor-icons/react";
 import TableModal from "./Modals/TableModal";
 import TableShimmer from "./shimmers/TableShimmer";
@@ -121,7 +122,8 @@ const TableBody: React.FC<Props> = ({ selectedFilter }) => {
                     }}
                     className="cursor-pointer"
                   />
-                  <Trash size="25" color="#FF0000" />
+                  {/* <Trash size="25" color="#FF0000" /> */}
+                  
                 </div>
               </td>
             </tr>

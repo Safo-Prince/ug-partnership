@@ -457,7 +457,7 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
           // Send email to the statically provided email
           const adminMailOptions = {
             from: 'sipp@ug.edu.gh',
-            to: 'mikesaxxmusic@gmail.com',//email of orid admin
+            to: 'mnhutchful@ug.edu.gh, DAdobeaAntwiOwusu@ug.edu.gh', // admin mails
             subject: 'New Partnership Submission  Received - Action Required',
             text: `
             Dear Administrator
@@ -646,11 +646,6 @@ app.get('/api/download-pdf/:id', async (req, res) => {
 
 
 
-
-
-
-
-// Endpoint to handle sending an email
 // Endpoint to handle sending an email
 app.post('/api/send-email', async (req, res) => {
   try {
@@ -682,6 +677,17 @@ Best regards,
 UG Partnership Assessment Team.
 
 `;
+
+provcSubject = 'New Partnership Approved';
+provcBody = `Dear Pro VC,
+
+A new partnership application has been approved.
+
+Best regards,
+
+UG Partnership Assessment Team.
+
+`;
     } else if (status === 'pending') {
       subject = 'Request for Additional Information - UG Partnerships';
       body = `Dear sir/madam,
@@ -701,6 +707,17 @@ Thank you for your cooperation.
 Best regards,
       
 UG Partnerships Assessment Team
+
+`;
+
+provcSubject = 'New Partnership Pending';
+provcBody = `Dear Pro VC,
+
+A new partnership application is pending approval. 
+
+Best regards,
+
+UG Partnership Assessment Team.
 
 `;
     } else {
@@ -728,6 +745,17 @@ UG Partnerships Assessment Team
 
     // Use nodemailer's sendMail with await to work with promises
     const info = await transporter.sendMail(mailOptions);
+
+    // Create mail options for the pro VC
+    const provcMailOptions = {
+      from: 'sipp@ug.edu.gh',
+      to: 'FAsante@ug.edu.gh',
+      subject: provcSubject,
+      text: provcBody,
+    };
+
+    // Send email to the pro VC
+    await transporter.sendMail(provcMailOptions);
 
     console.log('Email sent:', info.response);
     res.status(200).json({ message: 'Email sent successfully' });
