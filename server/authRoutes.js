@@ -29,7 +29,7 @@ router.use(bodyParser.json());
 
 // Simulate a user for testing
 const validUser = {
-  emails: ['mnhutchful@ug.edu.gh', 'DAdobeaAntwiOwusu@ug.edu.gh'],
+  emails: ['mnhutchful@ug.edu.gh', 'dadobeaAntwiOwusu@ug.edu.gh'],
   password: '1234567891',
 };
 
@@ -37,7 +37,7 @@ router.post('/login', urlencodedParser, (req, res) => {
   const { email, password } = req.body;
 
   // Check if the entered email matches any of the valid emails
-  if (validUser.emails.includes(email) && password === validUser.password) {
+  if (validUser.emails.includes(email.toLowerCase()) && password === validUser.password) {
     req.session.user = validUser; // Store user information in the session
     isLoggedIn = true;
 
