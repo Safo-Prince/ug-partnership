@@ -22,6 +22,7 @@ interface FormData {
   category: string;
   partner_type: string;
   industry: string;
+  key_partner: string;
   secondary_partners: string;
   duration: string;
   status: string;
@@ -29,7 +30,6 @@ interface FormData {
   end_date: string;
   newKeyword: string;
   keywords: string[];
-
   files: any[];
 }
 
@@ -43,6 +43,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
     category: "--select category--",
     partner_type: "--select partner type---",
     industry: "",
+    key_partner: "",
     secondary_partners: "",
     duration: "",
     status: "",
@@ -168,6 +169,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
         window.location.reload();
       } else {
         console.error("Error submitting form");
+        alert("Error Submitting Form; ensure all fields are filled")
       }
     } catch (error) {
       console.error("Error:", error);
@@ -254,7 +256,7 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         <option value="College Of Basic and Applied Science">
                           College of Basic And Applied Sciences
                         </option>
-                        <option value="College Of Humanity">
+                        <option value="College Of Humanities">
                           College of Humanities
                         </option>
                         <option value="College Of Education">
@@ -379,8 +381,8 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         placeholder="Key partner"
                         className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
                         type="text"
-                        name="secondary_partners"
-                        value={formData.secondary_partners}
+                        name="key_partner"
+                        value={formData.key_partner}
                         onChange={handleInputChange}
                       />
                       <input
