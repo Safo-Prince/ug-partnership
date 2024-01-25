@@ -169,7 +169,8 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
         window.location.reload();
       } else {
         console.error("Error submitting form");
-        alert("Error Submitting Form; ensure all fields are filled")
+        alert("Error Submitting Form; ensure all fields are filled");
+        setButtonText("submit");
       }
     } catch (error) {
       console.error("Error:", error);
