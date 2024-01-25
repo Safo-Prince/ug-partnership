@@ -177,15 +177,15 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
                           {modalData && modalData.partner_type}
                         </p>
                       </div>
-                      <div className="font-lato">
+                      {/* <div className="font-lato">
                         <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg ">
                           Duration
                         </h1>
                         <p className="text-[#56585B] text-left text-xs sm:text-base">
-                          {/* @ts-ignore */}
                           {modalData && modalData.duration}
                         </p>
-                      </div>
+                      </div> */}
+                      
                       <div className="font-lato">
                         <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg ">
                           Status
