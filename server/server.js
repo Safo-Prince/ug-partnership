@@ -14,9 +14,16 @@ require('dotenv').config(); // Load environment variables from .env file
 
 
 const app = express();
-const port = 3001;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:5173/',
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 
 const db = mysql.createPool({
