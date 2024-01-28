@@ -1,8 +1,16 @@
 import * as React from "react";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
+
+interface EditedFields {
+  location: { value: string; isEditing: boolean };
+  comment: { value: string; isEditing: boolean };
+  category: { value: string; isEditing: boolean };
+  partner_type: { value: string; isEditing: boolean };
+  status: { value: string; isEditing: boolean };
+}
 
 interface Props {
   open: boolean;
@@ -17,6 +25,13 @@ interface Props {
 }
 
 const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
+  const [editedFields, setEditedFields] = useState<EditedFields>({
+    location: { value: "", isEditing: false },
+    comment: { value: "", isEditing: false },
+    category: { value: "", isEditing: false },
+    partner_type: { value: "", isEditing: false },
+    status: { value: "", isEditing: false },
+  });
   const [modalData, setModalData] = useState(null);
   {
     /* @ts-ignore */
@@ -32,7 +47,9 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
           /* @ts-ignore */
         }
         /* @ts-ignore */
-        const response = await fetch(`https://partnerships.ug.edu.gh/api/data/${rowData.id}`);
+        const response = await fetch(
+          `https://partnerships.ug.edu.gh/api/data/${rowData.id}`
+        );
         const data = await response.json();
         console.log(data);
         setModalData(data);
@@ -75,13 +92,12 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
           }),
         }
       );
-      
-  
+
       // Check if the request was successful
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-  
+
       // Log a success message or handle as needed
       console.log("Email sent successfully");
       setOpen(false);
@@ -89,7 +105,33 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
       console.error("Error sending email:", error);
     }
   };
-  
+
+  const handleEditClick = (field: keyof EditedFields) => {
+    setEditedFields((prevFields) => ({
+      ...prevFields,
+      [field]: {
+        ...prevFields[field],
+        value: modalData ? modalData[field] : "",
+        isEditing: true,
+      },
+    }));
+  };
+
+  const handleCancelClick = (field: keyof EditedFields) => {
+    setEditedFields((prevFields) => ({
+      ...prevFields,
+      [field]: { ...prevFields[field], isEditing: false },
+    }));
+  };
+
+  const handleSaveClick = (field: keyof EditedFields) => {
+    setEditedFields((prevFields) => ({
+      ...prevFields,
+      [field]: { ...prevFields[field], isEditing: false },
+    }));
+  };
+
+  console.log(modalData);
 
   return (
     <Transition.Root static show={open} as={Fragment}>
@@ -140,68 +182,277 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
                     <div className="border border-stone-500 mt-3 mb-3 " />
 
                     <div className="space-y-3 flex flex-col items-start">
-                      <div className="font-lato">
-                        <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg">
+                      <div className="flex justify-between items-center w-full">
+                        <h1 className="font-bold  text-lg mt-4 text-left">
                           College
                         </h1>
+                        <PencilSquareIcon
+                          className="h-6 w-6 cursor-pointer "
+                          onClick={() => handleEditClick("location")}
+                        />
+                      </div>
+                      {editedFields.location.isEditing ? (
+                        <div className="w-full">
+                          <textarea
+                            rows={1}
+                            name="location"
+                            id="location"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                            value={editedFields.location.value}
+                            onChange={(e) =>
+                              setEditedFields((prevFields) => ({
+                                ...prevFields,
+                                location: {
+                                  ...prevFields.location,
+                                  value: e.target.value,
+                                },
+                              }))
+                            }
+                          />
+
+                          <div className="flex space-x-1 mt-1 justify-end">
+                            <button
+                              onClick={() => handleCancelClick("location")}
+                              className=" rounded-full border-[#153D6D] text-[#153D6D] border-2  px-4 py-1.5 text-xs sm:text-sm font-semibold shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                            >
+                              cancel
+                            </button>
+                            <button
+                              onClick={() => handleSaveClick("location")}
+                              className="  rounded-full bg-[#153D6D] px-4 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                            >
+                              save
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
                         <p className="text-[#56585B] text-left text-xs sm:text-base">
                           {/* @ts-ignore */}
                           {modalData && modalData.location}
                         </p>
+                      )}
+                      <div className="font-lato"></div>
+                      <div className="font-lato w-full">
+                        <div className="flex justify-between items-center w-full">
+                          <h1 className="font-bold  text-lg mt-4 text-left">
+                            Description
+                          </h1>
+                          <PencilSquareIcon
+                            className="h-6 w-6 cursor-pointer "
+                            onClick={() => handleEditClick("comment")}
+                          />
+                        </div>
+                        {editedFields.comment.isEditing ? (
+                          <div className="w-full">
+                            <textarea
+                              rows={1}
+                              name="comment"
+                              id="comment"
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                              value={editedFields.comment.value}
+                              onChange={(e) =>
+                                setEditedFields((prevFields) => ({
+                                  ...prevFields,
+                                  comment: {
+                                    ...prevFields.comment,
+                                    value: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+
+                            <div className="flex space-x-1 mt-1 justify-end">
+                              <button
+                                onClick={() => handleCancelClick("comment")}
+                                className=" rounded-full border-[#153D6D] text-[#153D6D] border-2  px-4 py-1.5 text-xs sm:text-sm font-semibold shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              >
+                                cancel
+                              </button>
+                              <button
+                                onClick={() => handleSaveClick("comment")}
+                                className="  rounded-full bg-[#153D6D] px-4 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              >
+                                save
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-[#56585B] text-left text-xs sm:text-base">
+                            {/* @ts-ignore */}
+                            {modalData && modalData.comment}
+                          </p>
+                        )}
                       </div>
-                      <div className="font-lato">
-                        <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg">
-                          Description
-                        </h1>
-                        <p className="text-[#56585B] text-left text-xs sm:text-base">
-                          {/* @ts-ignore */}
-                          {modalData && modalData.comment}
-                        </p>
-                      </div>
-                      <div className="font-lato   ">
-                        <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg ">
-                          Category
-                        </h1>
-                        <p className="text-[#56585B] text-xs sm:text-base">
-                          {/* @ts-ignore */}
-                          {modalData && modalData.category}
-                        </p>
+                      <div className="font-lato  w-full  ">
+                        <div className="flex justify-between items-center w-full">
+                          <h1 className="font-bold  text-lg mt-4 text-left">
+                            Category
+                          </h1>
+                          <PencilSquareIcon
+                            className="h-6 w-6 cursor-pointer "
+                            onClick={() => handleEditClick("category")}
+                          />
+                        </div>
+                        {editedFields.category.isEditing ? (
+                          <div className="w-full">
+                            <textarea
+                              rows={1}
+                              name="category"
+                              id="category"
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                              value={editedFields.category.value}
+                              onChange={(e) =>
+                                setEditedFields((prevFields) => ({
+                                  ...prevFields,
+                                  category: {
+                                    ...prevFields.category,
+                                    value: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+
+                            <div className="flex space-x-1 mt-1 justify-end">
+                              <button
+                                onClick={() => handleCancelClick("category")}
+                                className=" rounded-full border-[#153D6D] text-[#153D6D] border-2  px-4 py-1.5 text-xs sm:text-sm font-semibold shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              >
+                                cancel
+                              </button>
+                              <button
+                                onClick={() => handleSaveClick("category")}
+                                className="  rounded-full bg-[#153D6D] px-4 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              >
+                                save
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-[#56585B] text-left text-xs sm:text-base">
+                            <p className="text-[#56585B] text-xs sm:text-base">
+                              {/* @ts-ignore */}
+                              {modalData && modalData.category}
+                            </p>
+                          </p>
+                        )}
                       </div>
 
-                      <div className="font-lato">
-                        <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg ">
-                          Partner Type
-                        </h1>
-                        <p className="text-[#56585B]  text-xs sm:text-base">
-                          {/* @ts-ignore */}
-                          {modalData && modalData.partner_type}
-                        </p>
+                      <div className="font-lato w-full">
+                        <div className="flex justify-between items-center w-full">
+                          <h1 className="font-bold  text-lg mt-4 text-left">
+                            Partner Type
+                          </h1>
+                          <PencilSquareIcon
+                            className="h-6 w-6 cursor-pointer "
+                            onClick={() => handleEditClick("partner_type")}
+                          />
+                        </div>
+                        {editedFields.partner_type.isEditing ? (
+                          <div className="w-full">
+                            <textarea
+                              rows={1}
+                              name="partnerType"
+                              id="partnerType"
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                              value={editedFields.partner_type.value}
+                              onChange={(e) =>
+                                setEditedFields((prevFields) => ({
+                                  ...prevFields,
+                                  partner_type: {
+                                    ...prevFields.partner_type,
+                                    value: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+
+                            <div className="flex space-x-1 mt-1 justify-end">
+                              <button
+                                onClick={() =>
+                                  handleCancelClick("partner_type")
+                                }
+                                className=" rounded-full border-[#153D6D] text-[#153D6D] border-2  px-4 py-1.5 text-xs sm:text-sm font-semibold shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              >
+                                cancel
+                              </button>
+                              <button
+                                onClick={() => handleSaveClick("partner_type")}
+                                className="  rounded-full bg-[#153D6D] px-4 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              >
+                                save
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-[#56585B]  text-xs sm:text-base">
+                            {/* @ts-ignore */}
+                            {modalData && modalData.partner_type}
+                          </p>
+                        )}
                       </div>
-                      {/* <div className="font-lato">
-                        <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg ">
-                          Duration
-                        </h1>
-                        <p className="text-[#56585B] text-left text-xs sm:text-base">
-                          {modalData && modalData.duration}
-                        </p>
-                      </div> */}
-                      
-                      <div className="font-lato">
-                        <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg ">
-                          Status
-                        </h1>
-                        <p className="text-[#56585B] text-xs sm:text-base">
-                          {" "}
-                          {/* @ts-ignore */}
-                          {modalData && modalData.status}
-                        </p>
+
+                      <div className="font-lato w-full ">
+                        <div className="flex justify-between items-center w-full">
+                          <h1 className="font-bold  text-lg mt-4 text-left">
+                            Status
+                          </h1>
+                          <PencilSquareIcon
+                            className="h-6 w-6 cursor-pointer "
+                            onClick={() => handleEditClick("status")}
+                          />
+                        </div>
+                        {editedFields.status.isEditing ? (
+                          <div className="w-full">
+                            <textarea
+                              rows={1}
+                              name="status"
+                              id="status"
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#153D6D] sm:text-sm sm:leading-6"
+                              value={editedFields.status.value}
+                              onChange={(e) =>
+                                setEditedFields((prevFields) => ({
+                                  ...prevFields,
+                                  status: {
+                                    ...prevFields.status,
+                                    value: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+
+                            <div className="flex space-x-1 mt-1 justify-end">
+                              <button
+                                onClick={() => handleCancelClick("status")}
+                                className=" rounded-full border-[#153D6D] text-[#153D6D] border-2  px-4 py-1.5 text-xs sm:text-sm font-semibold shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              >
+                                cancel
+                              </button>
+                              <button
+                                onClick={() => handleSaveClick("status")}
+                                className="  rounded-full bg-[#153D6D] px-4 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-[#48627f]å focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              >
+                                save
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-[#56585B] text-xs sm:text-base">
+                            {" "}
+                            {/* @ts-ignore */}
+                            {modalData && modalData.status}
+                          </p>
+                        )}
                       </div>
                       <div className="font-lato">
                         <h1 className="text-[#9F9F9F] text-left text-sm sm:text-lg">
                           Relevant Files
                         </h1>
                         {/* @ts-ignore */}
-                        {modalData && modalData.files && modalData.files.split(",").map((filePath: string, index: number) => (
+                        {modalData &&
+                          modalData.files &&
+                          modalData.files
+                            .split(",")
+                            .map((filePath: string, index: number) => (
                               <p
                                 key={index}
                                 className="text-[#007BFF] text-left text-xs sm:text-base"
