@@ -7,7 +7,7 @@ const Hero: React.FC = () => {
     <>
       <div className=" hero-image bg-no-repeat bg-cover    w-full sm:h-72  h-32 flex items-center justify-center ">
         <h1 className=" font-medium sm:font-semibold  text-xl sm:text-2xl lg:text-6xl font-poppins  text-white">
-          UG Industry Partnerships
+          Industry Partnerships
         </h1>
       </div>
     </>
