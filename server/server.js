@@ -940,7 +940,6 @@ app.patch('/api/update-field/:id', async (req, res) => {
   const { field, value } = req.body;
 
   try {
-    // Assuming you have a MySQL connection named 'connection'
     // Execute the update query
     db.query(
       'UPDATE partnership_details SET ?? = ? WHERE id = ?',
