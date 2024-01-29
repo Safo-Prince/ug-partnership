@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: 'https://innovate.ug.edu.gh',
+  origin: 'https://partnerships.ug.edu.gh',
   optionsSuccessStatus: 200,
 };
 
