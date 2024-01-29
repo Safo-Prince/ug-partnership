@@ -125,7 +125,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
   const handleSaveClick = async (field: keyof EditedFields) => {
     try {
       {/* @ts-ignore */}
-      const response = await fetch(`https://partnership.ug.edu.gh/api/update-field/${rowData.id}`,
+      const response = await fetch(`https://partnerships.ug.edu.gh/api/update-field/${rowData.id}`,
         {
           method: "PATCH", // Use PATCH method for partial updates
           headers: {
