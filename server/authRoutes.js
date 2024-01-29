@@ -9,7 +9,7 @@ var isLoggedIn = false
 
 // Use CORS middleware
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'https://partnership.ug.edu.gh',
   optionsSuccessStatus: 200,
 };
 router.use(cors(corsOptions));

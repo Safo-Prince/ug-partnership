@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'https://innovate.ug.edu.gh',
   optionsSuccessStatus: 200,
 };
 
@@ -931,6 +931,34 @@ app.get('/api/download/:fileName', (req, res) => {
 
   // Use appropriate headers
   res.download(filePath);
+});
+
+
+//admin edit endpoint
+app.patch('/api/update-field/:id', async (req, res) => {
+  const { id } = req.params;
+  const { field, value } = req.body;
+
+  try {
+    // Assuming you have a MySQL connection named 'connection'
+    // Execute the update query
+    db.query(
+      'UPDATE partnership_details SET ?? = ? WHERE id = ?',
+      [field, value, id],
+      (error, results) => {
+        if (error) {
+          console.error('Error updating field:', error);
+          res.status(500).json({ success: false, error: 'Internal Server Error' });
+        } else {
+          console.log(`Field ${field} updated successfully`);
+          res.json({ success: true });
+        }
+      }
+    );
+  } catch (error) {
+    console.error('Error updating field:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
 });
 
 

@@ -47,9 +47,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
           /* @ts-ignore */
         }
         /* @ts-ignore */
-        const response = await fetch(
-          `https://partnerships.ug.edu.gh/api/data/${rowData.id}`
-        );
+        const response = await fetch(`https://partnerships.ug.edu.gh/api/data/${rowData.id}`);
         const data = await response.json();
         console.log(data);
         setModalData(data);
@@ -124,11 +122,37 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
     }));
   };
 
-  const handleSaveClick = (field: keyof EditedFields) => {
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [field]: { ...prevFields[field], isEditing: false },
-    }));
+  const handleSaveClick = async (field: keyof EditedFields) => {
+    try {
+      {/* @ts-ignore */}
+      const response = await fetch(`https://partnership.ug.edu.gh/api/update-field/${rowData.id}`,
+        {
+          method: "PATCH", // Use PATCH method for partial updates
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            field,
+            value: editedFields[field].value,
+          }),
+        }
+      );
+      
+  
+      const data = await response.json();
+      if (data.success) {
+        alert(`${field} updated successfully`);
+        window.location.reload();
+        setEditedFields((prevFields) => ({
+          ...prevFields,
+          [field]: { ...prevFields[field], isEditing: false },
+        }));
+      } else {
+        console.error(`Error updating field ${field}`);
+      }
+    } catch (error) {
+      console.error(`Error updating field ${field}:`, error);
+    }
   };
 
   console.log(modalData);
@@ -448,11 +472,7 @@ const TableModal: React.FC<Props> = ({ open, setOpen, rowData }) => {
                           Relevant Files
                         </h1>
                         {/* @ts-ignore */}
-                        {modalData &&
-                          modalData.files &&
-                          modalData.files
-                            .split(",")
-                            .map((filePath: string, index: number) => (
+                        {modalData && modalData.files && modalData.files.split(",").map((filePath: string, index: number) => (
                               <p
                                 key={index}
                                 className="text-[#007BFF] text-left text-xs sm:text-base"
