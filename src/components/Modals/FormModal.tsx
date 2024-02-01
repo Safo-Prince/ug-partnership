@@ -251,19 +251,19 @@ const FormModal: React.FC<Props> = ({ open, setOpen }) => {
                         <option disabled value="-- select college --">
                           -- Select college --
                         </option>
-                        <option value="College Of Health Sciences">
+                        <option value="College of Health Sciences">
                           College of Health Sciences
                         </option>
-                        <option value="College Of Basic and Applied Science">
+                        <option value="College of Basic and Applied Science">
                           College of Basic And Applied Sciences
                         </option>
-                        <option value="College Of Humanities">
+                        <option value="College of Humanities">
                           College of Humanities
                         </option>
-                        <option value="College Of Education">
+                        <option value="College of Education">
                           College of Education
                         </option>
-                        <option value="College Of Education">
+                        <option value="College of Education">
                           Central Administration
                         </option>
                       </select>

@@ -934,6 +934,33 @@ app.get('/api/download/:fileName', (req, res) => {
 });
 
 
+//admin edit endpoint
+app.patch('/api/update-field/:id', async (req, res) => {
+  const { id } = req.params;
+  const { field, value } = req.body;
+
+  try {
+    // Execute the update query
+    db.query(
+      'UPDATE partnership_details SET ?? = ? WHERE id = ?',
+      [field, value, id],
+      (error, results) => {
+        if (error) {
+          console.error('Error updating field:', error);
+          res.status(500).json({ success: false, error: 'Internal Server Error' });
+        } else {
+          console.log(`Field ${field} updated successfully`);
+          res.json({ success: true });
+        }
+      }
+    );
+  } catch (error) {
+    console.error('Error updating field:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+
 
 
 app.use('/', authRoutes); // Mount the auth routes under the /auth path
