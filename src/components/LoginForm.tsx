@@ -30,18 +30,17 @@ const LoginForm: React.FC = () => {
       if (response.ok) {
         setLoginError(false);
         setIsLoading(false);
+        localStorage.setItem("auth_token", credentials.email);
         navigate("/admin");
       } else {
         setLoginError(true);
         setIsLoading(false);
-        alert("Wrong Credentials")
+        alert("Wrong Credentials");
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
-
 
   return (
     <div className="w-full flex justify-center items-center flex-grow background-image min-h-screen">

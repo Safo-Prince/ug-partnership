@@ -1,17 +1,33 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Pagination from "./Pagination";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import Filter from "./Filter";
 import { columns } from "../constants/constants";
+import { useNavigate } from "react-router-dom";
 
 const AdminTable: React.FC = () => {
+  const navigate = useNavigate();
+
   const [selectedFilter, setSelectedFilter] = useState("");
 
   const handleSelectFilter = (filter: string) => {
     setSelectedFilter(filter);
   };
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("auth_token");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("auth_token") === null) navigate("/login");
+  }, []);
 
   return (
     <div className="mx-auto w-full sm:max-w-7xl py-16 sm:py-20 lg:px-8 px-6  h-min relative">
